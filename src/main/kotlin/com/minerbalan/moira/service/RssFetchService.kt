@@ -42,10 +42,8 @@ class RssFetchService {
                     }
                 }
             } catch (e: IOException) {
-                e.printStackTrace()
                 logger.error("An error has occurred on getting feed", e)
             } catch (e: FeedException) {
-                e.printStackTrace()
                 logger.error("An error has occurred on getting feed", e)
             }
         }
