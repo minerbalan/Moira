@@ -30,5 +30,4 @@ class Subscription {
 
     @Column(name = "deleted_at")
     var deletedAt: LocalDateTime? = null
-
 }

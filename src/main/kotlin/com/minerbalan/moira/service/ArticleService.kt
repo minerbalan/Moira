@@ -11,6 +11,10 @@ import javax.persistence.PersistenceContext
 class ArticleService {
     private val logger = LoggerFactory.getLogger(this.javaClass)
 
+    companion object {
+        private const val MAX_BULK_SIZE = 100
+    }
+
     @PersistenceContext
     var entityManager: EntityManager? = null
 
@@ -95,9 +99,5 @@ class ArticleService {
         } catch (e: Exception) {
             logger.error("An error has occurred on update article thumbnail", e)
         }
-    }
-
-    companion object {
-        private const val MAX_BULK_SIZE = 100
     }
 }

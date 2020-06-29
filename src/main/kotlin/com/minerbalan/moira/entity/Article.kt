@@ -35,5 +35,4 @@ class Article {
 
     @Column(name = "published_at")
     var publishedAt: LocalDateTime? = null
-
 }
