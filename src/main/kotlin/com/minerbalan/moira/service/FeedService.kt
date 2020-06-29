@@ -19,8 +19,7 @@ class FeedService {
         fun getArticleFromFeed(syndFeed: SyndFeed, subscriptionId: Long): List<Article> {
             val articleList = ArrayList<Article>()
             for (feed in syndFeed.entries) {
-                val article = Article()
-                article.subscriptionId = subscriptionId
+                val article = Article(subscriptionId = subscriptionId)
                 article.url = feed.uri
                 article.title = feed.title
                 article.description = feed.description.value
