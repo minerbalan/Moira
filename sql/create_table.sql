@@ -15,7 +15,7 @@ CREATE TABLE articles
     subscription_id bigint unsigned not null,
     url             varchar(255)    not null default '',
     title           varchar(1024)   not null default '',
-    description     mediumtext      not null default '',
+    description     mediumtext,
     thumbnail       varchar(1024)            default null,
     created_at      datetime        not null default now(),
     published_at    datetime        not null,
