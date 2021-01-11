@@ -47,3 +47,7 @@ tasks.withType<KotlinCompile> {
         jvmTarget = "1.8"
     }
 }
+
+tasks.named<org.springframework.boot.gradle.tasks.run.BootRun>("bootRun"){
+    jvmArgs("-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5050")
+}
