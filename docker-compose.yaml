@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  moira:
+    container_name: "moira-moira"
+    build:
+      context: "."
+      dockerfile: "./docker/moira/Dockerfile"
+    volumes:
+      - ".:/app/moira"
+      - "/app/moira/docker" # /app/moira/dockerフォルダはdockerに関するデータが入っているディレクトリなので除外する
+    ports:
+      - "18080:8080"
+    depends_on:
+      - db
+  db:
+    container_name: "moira-db"
+    build:
+      context: "."
+      dockerfile: "./docker/mysql/Dockerfile"
+    volumes:
+      - "./docker/mysql/data:/var/lib/mysql"
+      - "./docker/mysql/sql:/docker-entrypoint-initdb.d"
+      - "./logs:/var/log/mysql"
+    env_file:
+      - "./docker/mysql/.env"
+    ports:
+      - "13306:3306" # 開発用にあけておく 本番は閉じる
