@@ -1,4 +1,4 @@
-package com.minerbalan.moira.config
+package com.minerbalan.moira.javaconfig
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
