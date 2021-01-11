@@ -1,4 +1,4 @@
-FROM gradle:jdk8
+FROM adoptopenjdk/openjdk8:alpine
 
 WORKDIR /app/moira
-CMD gradle build --refresh-dependencies && gradle bootRun
+CMD ./gradlew bootRun

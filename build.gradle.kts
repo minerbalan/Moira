@@ -51,3 +51,7 @@ tasks.withType<KotlinCompile> {
 tasks.named<org.springframework.boot.gradle.tasks.run.BootRun>("bootRun"){
     jvmArgs("-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5050")
 }
+
+tasks.named<Wrapper>("wrapper"){
+    gradleVersion = "6.7.1"
+}
