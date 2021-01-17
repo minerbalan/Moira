@@ -1,6 +1,6 @@
 package com.minerbalan.moira.service
 
-import com.minerbalan.moira.entity.Article
+import com.minerbalan.moira.domain.entity.Article
 import com.rometools.rome.feed.synd.SyndFeed
 import java.time.LocalDateTime
 import java.time.ZoneId

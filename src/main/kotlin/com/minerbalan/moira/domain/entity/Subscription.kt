@@ -1,4 +1,4 @@
-package com.minerbalan.moira.entity
+package com.minerbalan.moira.domain.entity
 
 import java.time.LocalDateTime
 import javax.persistence.Column

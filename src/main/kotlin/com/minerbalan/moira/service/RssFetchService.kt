@@ -1,7 +1,7 @@
 package com.minerbalan.moira.service
 
-import com.minerbalan.moira.entity.Article
-import com.minerbalan.moira.entity.Subscription
+import com.minerbalan.moira.domain.entity.Article
+import com.minerbalan.moira.domain.entity.Subscription
 import com.rometools.rome.io.FeedException
 import com.rometools.rome.io.SyndFeedInput
 import com.rometools.rome.io.XmlReader

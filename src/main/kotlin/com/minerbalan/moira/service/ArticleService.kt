@@ -1,6 +1,5 @@
 package com.minerbalan.moira.service
 
-import com.minerbalan.moira.entity.Article
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.util.*

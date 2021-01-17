@@ -1,6 +1,6 @@
 package com.minerbalan.moira.service
 
-import com.minerbalan.moira.entity.Article
+import com.minerbalan.moira.domain.entity.Article
 import org.jsoup.Jsoup
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
