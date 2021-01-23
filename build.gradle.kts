@@ -6,7 +6,6 @@ plugins {
     kotlin("jvm") version "1.3.72"
     kotlin("plugin.spring") version "1.3.72"
     kotlin("plugin.jpa") version "1.3.72"
-    kotlin("kapt") version "1.3.72"
 }
 
 group = "com.minerbalan"
@@ -37,9 +36,6 @@ dependencies {
     implementation("com.rometools:rome:1.12.2")
     implementation("org.jsoup:jsoup:1.12.2")
     implementation("mysql:mysql-connector-java:8.0.18")
-
-    kapt("org.springframework.boot", "spring-boot-configuration-processor", "2.3.0.RELEASE")
-    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 }
 
 tasks.withType<Test> {
