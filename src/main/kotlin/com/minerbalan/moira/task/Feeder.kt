@@ -1,6 +1,5 @@
 package com.minerbalan.moira.task
 
-import com.minerbalan.moira.config.Database
 import com.minerbalan.moira.domain.repository.ArticlesRepository
 import com.minerbalan.moira.domain.repository.SubscriptionsRepository
 import com.minerbalan.moira.service.OgpService
@@ -12,8 +11,8 @@ import org.springframework.transaction.annotation.Transactional
 
 @Component
 class Feeder(private val subscriptionsRepository: SubscriptionsRepository,
-             private val articlesRepository: ArticlesRepository, private val ogpService: OgpService, private val
-             database: Database) {
+             private val articlesRepository: ArticlesRepository,
+             private val ogpService: OgpService) {
     private val logger = LoggerFactory.getLogger(this.javaClass)
 
 
@@ -24,7 +23,6 @@ class Feeder(private val subscriptionsRepository: SubscriptionsRepository,
     @Transactional
     fun doFeeder() {
         logger.info("start doFeeder")
-        logger.info(database.driverClassName)
         val subscriptionList = subscriptionsRepository.fetchSubscriptionList()
         val rssFetchService = RssFetchService()
         val articleList = rssFetchService.getFeedsList(subscriptionList)
