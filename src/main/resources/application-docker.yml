@@ -1,0 +1,6 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://moira-db/moira?reWriteBatchedInserts=true&serverTimezone=JST
+    username: dbuser
+    password: password
