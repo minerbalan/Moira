@@ -29,7 +29,7 @@ class Feeder(private val subscriptionsRepository: SubscriptionsRepository,
         articlesRepository.bulkInsertOrIgnoreArticles(articleList)
         val thumbnailNullArticle = articlesRepository.findByThumbnailIsNull()
         ogpService.getOgpProperties(thumbnailNullArticle)
-        //articlesRepository.bulkUpdateThumbnailArticles(thumbnailSetArticle)
+        articlesRepository.bulkUpdateThumbnailArticles(thumbnailNullArticle)
     }
 
 }
