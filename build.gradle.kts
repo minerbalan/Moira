@@ -33,8 +33,8 @@ dependencies {
     testImplementation("org.springframework.security:spring-security-test")
 
     implementation("org.apache.httpcomponents:httpclient:4.5.11")
-    implementation("com.rometools:rome:1.12.2")
-    implementation("org.jsoup:jsoup:1.12.2")
+    implementation("com.rometools:rome:1.15.0")
+    implementation("org.jsoup:jsoup:1.13.1")
     implementation("mysql:mysql-connector-java:8.0.18")
 }
 
