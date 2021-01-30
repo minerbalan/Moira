@@ -8,6 +8,9 @@ import org.springframework.stereotype.Repository
 
 @Repository
 class SubscriptionsRepositoryImpl(private val jdbcTemplate: JdbcTemplate) : SubscriptionsRepository {
+    /**
+     * 購読リストを取得する.
+     */
     override fun fetchSubscriptionList(): List<Subscription?> {
         return jdbcTemplate.query(
                 "SELECT * FROM subscriptions ORDER BY created_at DESC",

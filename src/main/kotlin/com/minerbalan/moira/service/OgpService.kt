@@ -16,7 +16,7 @@ class OgpService {
     fun getOgpProperties(articleList: List<Article?>): List<Article?> {
         for (article in articleList) {
             try {
-                if(article == null) continue;
+                if (article == null) continue
                 val document = Jsoup.connect(article.url).get()
                 val elements = document.select("meta[property~=og:image]")
                 val element = elements.first()

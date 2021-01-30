@@ -17,11 +17,17 @@ class ArticlesRepositoryImpl(private val jdbcTemplate: JdbcTemplate) : ArticlesR
 
     private val maxBulkSize = 100
 
+    /**
+     * サムネイルがnullの項目を取得する
+     */
     override fun findByThumbnailIsNull(): List<Article> {
         val sql = "SELECT * FROM articles WHERE thumbnail IS NULL"
         return jdbcTemplate.query(sql, ArticleRowMapper())
     }
 
+    /**
+     * Articleを挿入
+     */
     override fun bulkInsertOrIgnoreArticles(articleList: List<Article>) {
         if (articleList.isEmpty()) {
             return
@@ -56,6 +62,9 @@ class ArticlesRepositoryImpl(private val jdbcTemplate: JdbcTemplate) : ArticlesR
         }
     }
 
+    /**
+     * サムネイルをbulk update.
+     */
     override fun bulkUpdateThumbnailArticles(articleList: List<Article>) {
         if (articleList.isEmpty()) {
             return
@@ -79,8 +88,8 @@ class ArticlesRepositoryImpl(private val jdbcTemplate: JdbcTemplate) : ArticlesR
                 jdbcTemplate.update(sqlBuilder.toString()) { ps: PreparedStatement ->
                     run {
                         var parameterPosition = 0;
-                        for(j in 0 until parameterSize){
-                            val parameterArticle : Article = queue.remove()
+                        for (j in 0 until parameterSize) {
+                            val parameterArticle: Article = queue.remove()
                             val articleId = parameterArticle.id ?: throw RuntimeException("Article Id is Null")
                             // WHEN ... THEN... 句
                             ps.setLong(++parameterPosition, articleId)

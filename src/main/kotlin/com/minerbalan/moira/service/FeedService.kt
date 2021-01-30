@@ -7,7 +7,7 @@ import java.time.ZoneId
 import java.util.*
 
 class FeedService {
-    companion object{
+    companion object {
         /**
          * SyndFeedをArticleに変換する.URIとTitle,Description,PublishDateを変換する
          * PublishDateが存在しない場合は現在時刻がPublishDateになる
