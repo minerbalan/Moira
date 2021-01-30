@@ -2,14 +2,3 @@ spring:
   profiles:
     active: docker
 
-  jpa:
-    open-in-view: true
-    show-sql: true
-    properties:
-      hibernate:
-        generate_statistics: true
-        order_inserts: true
-        format_sql: true
-        dialect: org.hibernate.dialect.MySQLDialect
-        jdbc:
-          batch_size: 100
