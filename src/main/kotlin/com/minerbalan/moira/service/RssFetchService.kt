@@ -28,6 +28,7 @@ class RssFetchService {
         val articleList = ArrayList<Article>()
         for (subscription in subscriptionList) {
             if (subscription == null) continue
+            val subscriptionId = subscription.id ?: continue
             val url = subscription.url
             val httpUriRequest: HttpUriRequest = HttpGet(url)
             try {
@@ -36,7 +37,7 @@ class RssFetchService {
                         val inputStream: InputStream = closeableHttpResponse.entity.content
                         val syndFeedInput = SyndFeedInput()
                         val syndFeed = syndFeedInput.build(XmlReader(inputStream))
-                        val feedArticleList = FeedService.getArticleFromFeed(syndFeed, subscription.id)
+                        val feedArticleList = FeedService.getArticleFromFeed(syndFeed, subscriptionId)
                         articleList.addAll(feedArticleList)
                         subscription.lastFetchedAt = LocalDateTime.now()
                     }

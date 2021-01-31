@@ -3,7 +3,7 @@ package com.minerbalan.moira.domain.entity
 import java.time.LocalDateTime
 
 data class Subscription(
-        var id: Long,
+        var id: Long?,
 
         var name: String,
 
