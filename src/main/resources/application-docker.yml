@@ -4,3 +4,7 @@ spring:
     url: jdbc:mysql://moira-db/moira?reWriteBatchedInserts=true&serverTimezone=JST
     username: dbuser
     password: password
+moira:
+  web:
+    allow-origin:
+      - http://localhost:18080
