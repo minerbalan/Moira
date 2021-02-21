@@ -1,3 +1,13 @@
+CREATE TABLE users
+(
+    id         bigint unsigned not null auto_increment primary key,
+    user_name  varchar(255)    not null,
+    email      varchar(511)    not null unique,
+    password   varchar(255)    not null,
+    created_at datetime        not null,
+    updated_at datetime default null
+);
+
 CREATE TABLE subscriptions
 (
     id              bigint unsigned not null auto_increment primary key,
@@ -7,6 +17,18 @@ CREATE TABLE subscriptions
     last_fetched_at datetime        not null default '1970/1/1',
     updated_at      datetime                 default null,
     deleted_at      datetime                 default null
+);
+
+CREATE TABLE users_subscriptions
+(
+    users_id         bigint unsigned not null,
+    subscriptions_id bigint unsigned not null,
+    created_at       datetime        not null,
+    primary key (users_id, subscriptions_id),
+    foreign key fk_users_subscriptions_users (users_id)
+        references users (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    foreign key fk_users_subscriptions_subscriptions (subscriptions_id)
+        references subscriptions (id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE articles
