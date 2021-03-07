@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.builders.WebSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
@@ -14,6 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import org.springframework.security.web.csrf.CsrfFilter
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsConfigurationSource
@@ -21,7 +21,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
 @Configuration
 @EnableWebSecurity
-class SpringSecurityConfig(val webConfig: WebConfig, private val userAuthUseCase: UserAuthUseCase) : WebSecurityConfigurerAdapter() {
+class SpringSecurityConfig(val webConfig: WebConfig, private val userAuthUseCase: UserAuthUseCase) :
+    WebSecurityConfigurerAdapter() {
     //静的ファイルに認証をかけない
     override fun configure(web: WebSecurity) {
         web.ignoring().antMatchers("/favicon.ico", "/css/**", "/js/**")
@@ -29,22 +30,25 @@ class SpringSecurityConfig(val webConfig: WebConfig, private val userAuthUseCase
 
     override fun configure(http: HttpSecurity) {
         http.authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/login").permitAll()
-                .antMatchers(HttpMethod.POST, "/users").permitAll()
-                .anyRequest().authenticated()
+            .antMatchers(HttpMethod.POST, "/login").permitAll()
+            .antMatchers(HttpMethod.POST, "/users").permitAll()
+            .anyRequest().authenticated()
 
         http.exceptionHandling().accessDeniedHandler(AccessDeniedHandlerImpl())
 
-        val jsonAuthenticationFilter = JsonAuthenticationFilter(authenticationManager(), AntPathRequestMatcher("/login", "POST"))
+        val jsonAuthenticationFilter =
+            JsonAuthenticationFilter(authenticationManager(), AntPathRequestMatcher("/login", "POST"))
         jsonAuthenticationFilter.setAuthenticationSuccessHandler(AuthenticationSuccessHandlerImpl())
         jsonAuthenticationFilter.setAuthenticationFailureHandler(AuthenticationFailureHandlerImpl())
         http.addFilterBefore(jsonAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
-        
+
+        http.addFilterBefore(CsrfFilterImpl(webConfig), CsrfFilter::class.java)
+
         http
-                .logout()
-                .logoutUrl("/logout")
-                .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID")
+            .logout()
+            .logoutUrl("/logout")
+            .invalidateHttpSession(true)
+            .deleteCookies("JSESSIONID")
 
 
         http.cors().configurationSource(createCorsConfigSource())
@@ -53,11 +57,10 @@ class SpringSecurityConfig(val webConfig: WebConfig, private val userAuthUseCase
 
     override fun configure(auth: AuthenticationManagerBuilder) {
         auth
-                .userDetailsService(UserDetailsServiceImpl(userAuthUseCase))
-                .passwordEncoder(passwordEncoder())
+            .userDetailsService(UserDetailsServiceImpl(userAuthUseCase))
+            .passwordEncoder(passwordEncoder())
 
     }
-
 
     @Bean
     fun passwordEncoder(): PasswordEncoder {
@@ -67,7 +70,8 @@ class SpringSecurityConfig(val webConfig: WebConfig, private val userAuthUseCase
     private fun createCorsConfigSource(): CorsConfigurationSource {
         val corsConfig = CorsConfiguration()
         corsConfig.addAllowedHeader(CorsConfiguration.ALL)
-        corsConfig.allowedOrigins = webConfig.allowOrigin
+        webConfig.allowOrigin.forEach{corsConfig.addAllowedOrigin(it)}
+        corsConfig.addAllowedMethod(CorsConfiguration.ALL)
 
         val source = UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", corsConfig)
