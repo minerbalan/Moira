@@ -6,7 +6,7 @@ import org.springframework.scheduling.annotation.EnableScheduling
 
 @SpringBootApplication
 @EnableScheduling
-class MoiraApplication
+open class MoiraApplication
 
 fun main(args: Array<String>) {
     runApplication<MoiraApplication>(*args)
