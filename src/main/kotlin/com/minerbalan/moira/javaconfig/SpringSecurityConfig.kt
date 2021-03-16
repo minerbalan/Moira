@@ -63,7 +63,7 @@ open class SpringSecurityConfig(private val webConfig: WebConfig, private val us
     }
 
     @Bean
-    open fun passwordEncoder(): PasswordEncoder {
+    fun passwordEncoder(): PasswordEncoder {
         return BCryptPasswordEncoder()
     }
 
@@ -72,6 +72,7 @@ open class SpringSecurityConfig(private val webConfig: WebConfig, private val us
         corsConfig.addAllowedHeader(CorsConfiguration.ALL)
         webConfig.allowOrigin.forEach{corsConfig.addAllowedOrigin(it)}
         corsConfig.addAllowedMethod(CorsConfiguration.ALL)
+        corsConfig.allowCredentials = true
 
         val source = UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", corsConfig)
