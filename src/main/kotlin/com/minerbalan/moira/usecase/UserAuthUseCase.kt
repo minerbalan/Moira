@@ -10,7 +10,7 @@ class UserAuthUseCase(private val usersRepository: UsersRepository) {
         usersRepository.createUser(user)
     }
 
-    fun existsUser(email: String){
+    fun existsUser(email: String) {
         usersRepository.existsUser(email)
     }
 

@@ -21,7 +21,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
 @Configuration
 @EnableWebSecurity
-open class SpringSecurityConfig(private val webConfig: WebConfig, private val userAuthUseCase: UserAuthUseCase) :
+class SpringSecurityConfig(private val webConfig: WebConfig, private val userAuthUseCase: UserAuthUseCase) :
     WebSecurityConfigurerAdapter() {
     //静的ファイルに認証をかけない
     override fun configure(web: WebSecurity) {

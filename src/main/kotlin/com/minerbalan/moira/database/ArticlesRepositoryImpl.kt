@@ -87,7 +87,7 @@ class ArticlesRepositoryImpl(private val jdbcTemplate: JdbcTemplate) : ArticlesR
                 sqlBuilder.append(" ) ")
                 jdbcTemplate.update(sqlBuilder.toString()) { ps: PreparedStatement ->
                     run {
-                        var parameterPosition = 0;
+                        var parameterPosition = 0
                         for (j in 0 until parameterSize) {
                             val parameterArticle: Article = queue.remove()
                             val articleId = parameterArticle.id ?: throw RuntimeException("Article Id is Null")
