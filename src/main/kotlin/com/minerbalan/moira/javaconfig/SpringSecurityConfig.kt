@@ -47,6 +47,7 @@ class SpringSecurityConfig(private val webConfig: WebConfig, private val userAut
         http
             .logout()
             .logoutUrl("/logout")
+            .logoutSuccessHandler(LogoutSuccessHandlerImpl())
             .invalidateHttpSession(true)
             .deleteCookies("JSESSIONID")
 
