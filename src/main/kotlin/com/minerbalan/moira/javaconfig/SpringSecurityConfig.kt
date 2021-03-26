@@ -22,7 +22,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 @Configuration
 @EnableWebSecurity
 class SpringSecurityConfig(private val webConfig: WebConfig, private val userAuthUseCase: UserAuthUseCase) :
-    WebSecurityConfigurerAdapter() {
+        WebSecurityConfigurerAdapter() {
     //静的ファイルに認証をかけない
     override fun configure(web: WebSecurity) {
         web.ignoring().antMatchers("/favicon.ico", "/css/**", "/js/**")
@@ -30,14 +30,14 @@ class SpringSecurityConfig(private val webConfig: WebConfig, private val userAut
 
     override fun configure(http: HttpSecurity) {
         http.authorizeRequests()
-            .antMatchers(HttpMethod.POST, "/login").permitAll()
-            .antMatchers(HttpMethod.POST, "/users").permitAll()
-            .anyRequest().authenticated()
+                .antMatchers(HttpMethod.POST, "/login").permitAll()
+                .antMatchers(HttpMethod.POST, "/users").permitAll()
+                .anyRequest().authenticated()
 
         http.exceptionHandling().accessDeniedHandler(AccessDeniedHandlerImpl())
 
         val jsonAuthenticationFilter =
-            JsonAuthenticationFilter(authenticationManager(), AntPathRequestMatcher("/login", "POST"))
+                JsonAuthenticationFilter(authenticationManager(), AntPathRequestMatcher("/login", "POST"))
         jsonAuthenticationFilter.setAuthenticationSuccessHandler(AuthenticationSuccessHandlerImpl())
         jsonAuthenticationFilter.setAuthenticationFailureHandler(AuthenticationFailureHandlerImpl())
         http.addFilterBefore(jsonAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
@@ -45,11 +45,11 @@ class SpringSecurityConfig(private val webConfig: WebConfig, private val userAut
         http.addFilterBefore(CsrfFilterImpl(webConfig), CsrfFilter::class.java)
 
         http
-            .logout()
-            .logoutUrl("/logout")
-            .logoutSuccessHandler(LogoutSuccessHandlerImpl())
-            .invalidateHttpSession(true)
-            .deleteCookies("JSESSIONID")
+                .logout()
+                .logoutUrl("/logout")
+                .logoutSuccessHandler(LogoutSuccessHandlerImpl())
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID")
 
 
         http.cors().configurationSource(createCorsConfigSource())
@@ -58,8 +58,8 @@ class SpringSecurityConfig(private val webConfig: WebConfig, private val userAut
 
     override fun configure(auth: AuthenticationManagerBuilder) {
         auth
-            .userDetailsService(UserDetailsServiceImpl(userAuthUseCase))
-            .passwordEncoder(passwordEncoder())
+                .userDetailsService(UserDetailsServiceImpl(userAuthUseCase))
+                .passwordEncoder(passwordEncoder())
 
     }
 
@@ -71,7 +71,7 @@ class SpringSecurityConfig(private val webConfig: WebConfig, private val userAut
     private fun createCorsConfigSource(): CorsConfigurationSource {
         val corsConfig = CorsConfiguration()
         corsConfig.addAllowedHeader(CorsConfiguration.ALL)
-        webConfig.allowOrigin.forEach{corsConfig.addAllowedOrigin(it)}
+        webConfig.allowOrigin.forEach { corsConfig.addAllowedOrigin(it) }
         corsConfig.addAllowedMethod(CorsConfiguration.ALL)
         corsConfig.allowCredentials = true
 
