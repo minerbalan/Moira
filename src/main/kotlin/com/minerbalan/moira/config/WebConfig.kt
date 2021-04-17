@@ -6,5 +6,5 @@ import org.springframework.stereotype.Component
 @Component
 @ConfigurationProperties(prefix = "moira.web")
 data class WebConfig (
-        var allowOrigin: HashSet<String> = HashSet()
-        )
+    var allowOrigin: HashSet<String> = HashSet()
+)
