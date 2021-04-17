@@ -50,4 +50,23 @@ class RssFetchService {
         }
         return articleList
     }
+
+    fun getFeedTitle(subscriptUrl: String): String? {
+        val httpUriRequest: HttpUriRequest = HttpGet(subscriptUrl)
+        try {
+            HttpClients.createMinimal().use { closeableHttpClient ->
+                closeableHttpClient.execute(httpUriRequest).use { closeableHttpResponse ->
+                    val inputStream: InputStream = closeableHttpResponse.entity.content
+                    val syndFeedInput = SyndFeedInput()
+                    val syndFeed = syndFeedInput.build(XmlReader(inputStream))
+                    return syndFeed.title
+                }
+            }
+        } catch (e: IOException) {
+            logger.error("An error has occurred on getting feed", e)
+        } catch (e: FeedException) {
+            logger.error("An error has occurred on getting feed", e)
+        }
+        return null
+    }
 }

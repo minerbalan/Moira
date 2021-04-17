@@ -13,8 +13,9 @@ class SubscriptionsRepositoryImpl(private val jdbcTemplate: JdbcTemplate) : Subs
      */
     override fun insertSubscription(subscription: Subscription) {
         jdbcTemplate.update(
-                "INSERT INTO subscriptions(name, url, created_at, last_fetched_at) VALUES (?,?,?,?)",
-                subscription.name, subscription.url, subscription.createdAt, subscription.lastFetchedAt)
+            "INSERT INTO subscriptions(name, url, created_at, last_fetched_at) VALUES (?,?,?,?)",
+            subscription.name, subscription.url, subscription.createdAt, subscription.lastFetchedAt
+        )
     }
 
     /**
@@ -22,8 +23,24 @@ class SubscriptionsRepositoryImpl(private val jdbcTemplate: JdbcTemplate) : Subs
      */
     override fun fetchSubscriptionList(): List<Subscription?> {
         return jdbcTemplate.query(
-                "SELECT * FROM subscriptions ORDER BY created_at DESC",
-                SubscriptionRowMapper()
+            "SELECT * FROM subscriptions WHERE deleted_at IS NULL ORDER BY created_at DESC",
+            SubscriptionRowMapper()
         )
+    }
+
+    override fun existsSubscription(url: String): Boolean {
+        val subscription = getSubscriptionByUrl(url)
+        return subscription != null
+    }
+
+    override fun getSubscriptionByUrl(url: String): Subscription? {
+        val list = jdbcTemplate.query(
+            "SELECT * FROM subscriptions WHERE url = ? AND deleted_at IS NULL ORDER BY created_at DESC",
+            SubscriptionRowMapper(), url
+        )
+        if (list.isEmpty()) {
+            return null
+        }
+        return list[0]
     }
 }

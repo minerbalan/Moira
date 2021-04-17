@@ -5,7 +5,6 @@ import javax.validation.constraints.NotBlank
 import javax.validation.constraints.Size
 
 data class SubscriptionPostRequest(
-    @field:NotBlank
     @field:Size(min = 1, max = 255)
     var name: String? = null,
     @field:NotBlank
