@@ -14,9 +14,9 @@ CREATE TABLE subscriptions
     name            varchar(255)    not null,
     url             varchar(255)    not null unique,
     created_at      datetime        not null,
-    last_fetched_at datetime        not null default '1970/1/1',
-    updated_at      datetime                 default null,
-    deleted_at      datetime                 default null
+    last_fetched_at datetime,
+    updated_at      datetime default null,
+    deleted_at      datetime default null
 );
 
 CREATE TABLE users_subscriptions

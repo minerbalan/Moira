@@ -11,7 +11,7 @@ data class Subscription(
 
         var createdAt: LocalDateTime,
 
-        var lastFetchedAt: LocalDateTime,
+        var lastFetchedAt: LocalDateTime? = null,
 
         var updatedAt: LocalDateTime? = null,
 
