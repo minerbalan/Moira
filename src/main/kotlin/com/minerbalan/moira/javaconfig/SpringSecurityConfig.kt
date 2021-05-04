@@ -1,7 +1,7 @@
 package com.minerbalan.moira.javaconfig
 
 import com.minerbalan.moira.config.WebConfig
-import com.minerbalan.moira.usecase.UserAuthUseCase
+import com.minerbalan.moira.usecase.UserUseCase
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
@@ -21,7 +21,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
 @Configuration
 @EnableWebSecurity
-class SpringSecurityConfig(private val webConfig: WebConfig, private val userAuthUseCase: UserAuthUseCase) :
+class SpringSecurityConfig(private val webConfig: WebConfig, private val userUseCase: UserUseCase) :
         WebSecurityConfigurerAdapter() {
     //静的ファイルに認証をかけない
     override fun configure(web: WebSecurity) {
@@ -58,7 +58,7 @@ class SpringSecurityConfig(private val webConfig: WebConfig, private val userAut
 
     override fun configure(auth: AuthenticationManagerBuilder) {
         auth
-                .userDetailsService(UserDetailsServiceImpl(userAuthUseCase))
+                .userDetailsService(UserDetailsServiceImpl(userUseCase))
                 .passwordEncoder(passwordEncoder())
 
     }
