@@ -11,7 +11,7 @@ interface SubscriptionsRepository {
     /**
      * 購読リストを取得する.
      */
-    fun fetchSubscriptionList(): List<Subscription?>
+    fun fetchSubscriptionList(): List<Subscription>
 
     /**
      * 購読urlが既に存在しているか確認する

@@ -1,33 +1,30 @@
-package com.minerbalan.moira.service
+package com.minerbalan.moira.rss
 
 import com.minerbalan.moira.domain.entity.Article
 import com.minerbalan.moira.domain.entity.Subscription
+import com.minerbalan.moira.gateway.RssGateway
+import com.rometools.rome.feed.synd.SyndFeed
 import com.rometools.rome.io.FeedException
 import com.rometools.rome.io.SyndFeedInput
 import com.rometools.rome.io.XmlReader
-
 import org.apache.http.client.methods.HttpGet
 import org.apache.http.client.methods.HttpUriRequest
 import org.apache.http.impl.client.HttpClients
 import org.slf4j.LoggerFactory
+import org.springframework.stereotype.Service
 import java.io.IOException
 import java.io.InputStream
 import java.time.LocalDateTime
-import java.util.*
+import java.time.ZoneId
+import java.util.ArrayList
 
-class RssFetchService {
+@Service
+class RssGatewayImpl : RssGateway {
     private val logger = LoggerFactory.getLogger(this.javaClass)
 
-    /**
-     * Listに入っているSubscriptionからURLからRSSFeedを取得し、Articleのリストをreturnする.
-     *
-     * @param subscriptionList 取得するSubscription
-     * @return 取得したArticle. Subscriptionごとに分けることなく、一括でreturnする
-     */
-    fun getFeedsList(subscriptionList: List<Subscription?>): List<Article> {
+    override fun fetchArticleFromSubscriptions(subscriptionList: List<Subscription>): List<Article> {
         val articleList = ArrayList<Article>()
         for (subscription in subscriptionList) {
-            if (subscription == null) continue
             val subscriptionId = subscription.id ?: continue
             val url = subscription.url
             val httpUriRequest: HttpUriRequest = HttpGet(url)
@@ -37,7 +34,7 @@ class RssFetchService {
                         val inputStream: InputStream = closeableHttpResponse.entity.content
                         val syndFeedInput = SyndFeedInput()
                         val syndFeed = syndFeedInput.build(XmlReader(inputStream))
-                        val feedArticleList = FeedService.getArticleFromFeed(syndFeed, subscriptionId)
+                        val feedArticleList = getArticleFromFeed(syndFeed, subscriptionId)
                         articleList.addAll(feedArticleList)
                         subscription.lastFetchedAt = LocalDateTime.now()
                     }
@@ -51,8 +48,8 @@ class RssFetchService {
         return articleList
     }
 
-    fun getFeedTitle(subscriptUrl: String): String? {
-        val httpUriRequest: HttpUriRequest = HttpGet(subscriptUrl)
+    override fun fetchFeedTitle(url: String): String? {
+        val httpUriRequest: HttpUriRequest = HttpGet(url)
         try {
             HttpClients.createMinimal().use { closeableHttpClient ->
                 closeableHttpClient.execute(httpUriRequest).use { closeableHttpResponse ->
@@ -68,5 +65,32 @@ class RssFetchService {
             logger.error("An error has occurred on getting feed", e)
         }
         return null
+    }
+
+    /**
+     * SyndFeedをArticleに変換する.URIとTitle,Description,PublishDateを変換する
+     * PublishDateが存在しない場合は現在時刻がPublishDateになる
+     *
+     * @param syndFeed       取得したFeed
+     * @param subscriptionId 取得したFeedのSubscriptionId
+     * @return 変換したArticle.
+     */
+    private fun getArticleFromFeed(syndFeed: SyndFeed, subscriptionId: Long): List<Article> {
+        val articleList = ArrayList<Article>()
+        for (feed in syndFeed.entries) {
+            val article = Article(subscriptionId = subscriptionId)
+            article.url = feed.uri
+            article.title = feed.title
+            article.description = feed.description.value
+            val publishDate = feed.publishedDate
+            //publishDateが存在しない場合、現在時刻をpublishDateにする
+            if (publishDate == null) {
+                article.publishedAt = LocalDateTime.now()
+            } else {
+                article.publishedAt = LocalDateTime.ofInstant(publishDate.toInstant(), ZoneId.of("Asia/Tokyo"))
+            }
+            articleList.add(article)
+        }
+        return articleList
     }
 }

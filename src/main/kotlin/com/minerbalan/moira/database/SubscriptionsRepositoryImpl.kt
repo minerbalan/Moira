@@ -21,7 +21,7 @@ class SubscriptionsRepositoryImpl(private val jdbcTemplate: JdbcTemplate) : Subs
     /**
      * 購読リストを取得する.
      */
-    override fun fetchSubscriptionList(): List<Subscription?> {
+    override fun fetchSubscriptionList(): List<Subscription> {
         return jdbcTemplate.query(
             "SELECT * FROM subscriptions WHERE deleted_at IS NULL ORDER BY created_at DESC",
             SubscriptionRowMapper()
