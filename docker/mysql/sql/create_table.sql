@@ -11,7 +11,6 @@ CREATE TABLE users
 CREATE TABLE subscriptions
 (
     id              bigint unsigned not null auto_increment primary key,
-    name            varchar(255)    not null,
     url             varchar(255)    not null unique,
     created_at      datetime        not null,
     last_fetched_at datetime,
@@ -23,6 +22,7 @@ CREATE TABLE users_subscriptions
 (
     users_id         bigint unsigned not null,
     subscriptions_id bigint unsigned not null,
+    name             varchar(255)    not null,
     created_at       datetime        not null,
     primary key (users_id, subscriptions_id),
     foreign key fk_users_subscriptions_users (users_id)
