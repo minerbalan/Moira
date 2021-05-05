@@ -6,5 +6,5 @@ import com.minerbalan.moira.domain.entity.Subscription
 interface RssGateway {
     fun fetchArticleFromSubscriptions(subscriptionList: List<Subscription>): List<Article>
 
-    fun fetchFeedTitle(url: String): String?
+    fun fetchFeedTitle(url: String): String
 }

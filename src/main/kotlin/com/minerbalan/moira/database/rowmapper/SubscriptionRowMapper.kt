@@ -8,7 +8,6 @@ class SubscriptionRowMapper : RowMapper<Subscription> {
     override fun mapRow(rs: ResultSet, rowNum: Int): Subscription {
         return Subscription(
                 id = rs.getLong("id"),
-                name = rs.getString("name"),
                 url = rs.getString("url"),
                 createdAt = rs.getTimestamp("created_at").toLocalDateTime(),
                 lastFetchedAt = rs.getTimestamp("last_fetched_at").toLocalDateTime(),

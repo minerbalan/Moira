@@ -5,8 +5,6 @@ import java.time.LocalDateTime
 data class Subscription(
     var id: Long?,
 
-    var name: String,
-
     var url: String,
 
     var createdAt: LocalDateTime,

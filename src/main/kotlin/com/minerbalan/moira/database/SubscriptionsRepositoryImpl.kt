@@ -5,6 +5,7 @@ import com.minerbalan.moira.domain.entity.Subscription
 import com.minerbalan.moira.domain.repository.SubscriptionsRepository
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Repository
+import java.time.LocalDateTime
 
 @Repository
 class SubscriptionsRepositoryImpl(private val jdbcTemplate: JdbcTemplate) : SubscriptionsRepository {
@@ -13,8 +14,8 @@ class SubscriptionsRepositoryImpl(private val jdbcTemplate: JdbcTemplate) : Subs
      */
     override fun insertSubscription(subscription: Subscription) {
         jdbcTemplate.update(
-            "INSERT INTO subscriptions(name, url, created_at, last_fetched_at) VALUES (?,?,?,?)",
-            subscription.name, subscription.url, subscription.createdAt, subscription.lastFetchedAt
+            "INSERT INTO subscriptions(url, created_at, last_fetched_at) VALUES (?,?,?)",
+            subscription.url, subscription.createdAt, subscription.lastFetchedAt
         )
     }
 
@@ -42,5 +43,21 @@ class SubscriptionsRepositoryImpl(private val jdbcTemplate: JdbcTemplate) : Subs
             return null
         }
         return list[0]
+    }
+
+    override fun isUserSubscribe(userId: Long, subscriptionId: Long): Boolean {
+        val result = jdbcTemplate.queryForList(
+            "SELECT users_id FROM users_subscriptions WHERE users_id = ? AND subscriptions_id = ? ",
+            userId,
+            subscriptionId
+        )
+        return result.isNotEmpty()
+    }
+
+    override fun linkingUserAndSubscription(userId: Long, subscriptionId: Long, subscriptionName: String) {
+        jdbcTemplate.update(
+            "INSERT INTO users_subscriptions(users_id, subscriptions_id, name, created_at) VALUES (?,?,?,?)",
+            userId, subscriptionId, subscriptionName, LocalDateTime.now()
+        )
     }
 }

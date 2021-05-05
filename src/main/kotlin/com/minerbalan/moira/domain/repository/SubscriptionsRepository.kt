@@ -22,4 +22,14 @@ interface SubscriptionsRepository {
      * URLから購読Objectを取得する
      */
     fun getSubscriptionByUrl(url: String): Subscription?
+
+    /**
+     * ユーザーが購読しているか
+     */
+    fun isUserSubscribe(userId: Long, subscriptionId: Long): Boolean
+
+    /**
+     * ユーザーと購読を紐づける
+     */
+    fun linkingUserAndSubscription(userId: Long, subscriptionId: Long, subscriptionName: String)
 }
