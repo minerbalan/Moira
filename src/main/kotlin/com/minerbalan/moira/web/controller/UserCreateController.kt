@@ -24,15 +24,15 @@ class UserCreateController(
         val email = request.email
         val rawPassword = request.password
         if (bindingResult.hasErrors() || username == null || email == null || rawPassword == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(BasicResponse(bindingResult.objectName))
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(BasicResponse(false, bindingResult.objectName))
         }
 
         val createResult = userUseCase.createUser(username, email, rawPassword)
 
         if (!createResult.isSuccess()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(BasicResponse(createResult.getErrorMessage()))
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(BasicResponse(false, createResult.getErrorMessage()))
         }
 
-        return ResponseEntity.status(HttpStatus.OK).body(BasicResponse("Register Success"))
+        return ResponseEntity.status(HttpStatus.OK).body(BasicResponse(true, "Register Success"))
     }
 }

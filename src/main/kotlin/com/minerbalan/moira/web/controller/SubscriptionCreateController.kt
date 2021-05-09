@@ -28,14 +28,14 @@ class SubscriptionCreateController(val subscriptionUseCase: SubscriptionUseCase)
         val name = request.name
         val url = request.url
         if (bindingResult.hasErrors() || url == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(BasicResponse("Error Message"))
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(BasicResponse(false, "Error Message"))
         }
 
         val result = subscriptionUseCase.createSubscription(user.username, url, name)
         if (!result.isSuccess()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(BasicResponse(result.getErrorMessage()))
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(BasicResponse(false, result.getErrorMessage()))
         }
 
-        return ResponseEntity.status(HttpStatus.OK).body(BasicResponse("Register Success"))
+        return ResponseEntity.status(HttpStatus.OK).body(BasicResponse(true, "Register Success"))
     }
 }

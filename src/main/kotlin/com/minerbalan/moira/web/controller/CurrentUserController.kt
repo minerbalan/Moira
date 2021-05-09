@@ -17,6 +17,6 @@ class CurrentUserController(private val userUseCase: UserUseCase) {
         }
         val loginUser = userUseCase.findUserFromEmail(user.username)
                 ?: throw IllegalArgumentException("emailと一致するユーザーがいない")
-        return UserResponse(username = loginUser.userName)
+        return UserResponse(isSuccess = true, message = "success", username = loginUser.userName)
     }
 }
