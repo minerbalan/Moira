@@ -4,9 +4,6 @@ import com.minerbalan.moira.domain.entity.User
 import com.minerbalan.moira.domain.repository.UsersRepository
 import com.minerbalan.moira.usecase.UseCaseResult
 import com.minerbalan.moira.usecase.UserUseCase
-import com.minerbalan.moira.web.response.BasicResponse
-import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
