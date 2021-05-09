@@ -104,4 +104,18 @@ class ArticlesRepositoryImpl(private val jdbcTemplate: JdbcTemplate) : ArticlesR
             logger.error("An error has occurred on update article thumbnail", e)
         }
     }
+
+    override fun fetchArticleLatest(email: String, limit: Int, offset: Int): List<Article> {
+        val stringBuilder = StringBuilder()
+        stringBuilder.appendln("SELECT articles.* FROM articles ")
+        stringBuilder.appendln("    INNER JOIN users_subscriptions US ")
+        stringBuilder.appendln("        ON articles.subscription_id = US.subscriptions_id ")
+        stringBuilder.appendln("    INNER JOIN users ")
+        stringBuilder.appendln("        ON US.users_id = users.id ")
+        stringBuilder.appendln("            AND users.email = ? ")
+        stringBuilder.appendln("ORDER BY published_at desc ")
+        stringBuilder.appendln("LIMIT ? OFFSET ? ")
+
+        return jdbcTemplate.query<Article>(stringBuilder.toString(), ArticleRowMapper(), email, limit, offset)
+    }
 }

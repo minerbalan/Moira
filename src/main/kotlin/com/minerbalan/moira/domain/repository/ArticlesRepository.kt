@@ -8,4 +8,6 @@ interface ArticlesRepository {
     fun bulkInsertOrIgnoreArticles(articleList: List<Article>)
 
     fun bulkUpdateThumbnailArticles(articleList: List<Article>)
+
+    fun fetchArticleLatest(email: String, limit: Int, offset: Int): List<Article>
 }
