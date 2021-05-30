@@ -10,4 +10,8 @@ class ArticleInteractor(private val articlesRepository: ArticlesRepository) : Ar
     override fun fetchArticleLatest(email: String, limit: Int, offset: Int): List<Article> {
         return articlesRepository.fetchArticleLatest(email, limit, offset)
     }
+
+    override fun countArticle(email: String): Long {
+        return articlesRepository.countArticle(email)
+    }
 }

@@ -4,4 +4,6 @@ import com.minerbalan.moira.domain.entity.Article
 
 interface ArticleUseCase {
     fun fetchArticleLatest(email: String, limit: Int, offset: Int): List<Article>
+
+    fun countArticle(email: String): Long
 }

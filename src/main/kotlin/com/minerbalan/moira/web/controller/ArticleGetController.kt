@@ -25,6 +25,7 @@ class ArticleGetController(private val articleUseCase: ArticleUseCase) {
         val offset = request.offset ?: 0
 
         val result = articleUseCase.fetchArticleLatest(user.username, limit, offset)
-        return ArticleResponse(true, "success", result)
+        val articleCount = articleUseCase.countArticle(user.username)
+        return ArticleResponse(true, "success", result, articleCount)
     }
 }

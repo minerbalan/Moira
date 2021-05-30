@@ -118,4 +118,20 @@ class ArticlesRepositoryImpl(private val jdbcTemplate: JdbcTemplate) : ArticlesR
 
         return jdbcTemplate.query<Article>(stringBuilder.toString(), ArticleRowMapper(), email, limit, offset)
     }
+
+    override fun countArticle(email: String): Long {
+        val stringBuilder = StringBuilder()
+        stringBuilder.appendln("SELECT count(articles.id) as ARTICLES_COUNT FROM articles ")
+        stringBuilder.appendln("    INNER JOIN users_subscriptions US ")
+        stringBuilder.appendln("        ON articles.subscription_id = US.subscriptions_id ")
+        stringBuilder.appendln("    INNER JOIN users ")
+        stringBuilder.appendln("        ON US.users_id = users.id ")
+        stringBuilder.appendln("            AND users.email = ? ")
+        val sqlResult = jdbcTemplate.queryForMap(stringBuilder.toString(), email)
+        val articleCount = sqlResult["ARTICLES_COUNT"]
+        if(articleCount is Long){
+            return articleCount
+        }
+        throw IllegalStateException("記事の取得中にエラー")
+    }
 }
