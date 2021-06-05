@@ -1,7 +1,7 @@
 package com.minerbalan.moira.database
 
 import com.minerbalan.moira.database.rowmapper.SubscriptionRowMapper
-import com.minerbalan.moira.domain.entity.Subscription
+import com.minerbalan.moira.domain.entity.SubscriptionEntity
 import com.minerbalan.moira.domain.repository.SubscriptionsRepository
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Repository
@@ -12,17 +12,17 @@ class SubscriptionsRepositoryImpl(private val jdbcTemplate: JdbcTemplate) : Subs
     /**
      * 新しくsubscriptionを追加する
      */
-    override fun insertSubscription(subscription: Subscription) {
+    override fun insertSubscription(subscriptionEntity: SubscriptionEntity) {
         jdbcTemplate.update(
             "INSERT INTO subscriptions(url, created_at, last_fetched_at) VALUES (?,?,?)",
-            subscription.url, subscription.createdAt, subscription.lastFetchedAt
+            subscriptionEntity.url, subscriptionEntity.createdAt, subscriptionEntity.lastFetchedAt
         )
     }
 
     /**
      * 購読リストを取得する.
      */
-    override fun fetchSubscriptionList(): List<Subscription> {
+    override fun fetchSubscriptionList(): List<SubscriptionEntity> {
         return jdbcTemplate.query(
             "SELECT * FROM subscriptions WHERE deleted_at IS NULL ORDER BY created_at DESC",
             SubscriptionRowMapper()
@@ -34,7 +34,7 @@ class SubscriptionsRepositoryImpl(private val jdbcTemplate: JdbcTemplate) : Subs
         return subscription != null
     }
 
-    override fun getSubscriptionByUrl(url: String): Subscription? {
+    override fun getSubscriptionByUrl(url: String): SubscriptionEntity? {
         val list = jdbcTemplate.query(
             "SELECT * FROM subscriptions WHERE url = ? AND deleted_at IS NULL ORDER BY created_at DESC",
             SubscriptionRowMapper(), url

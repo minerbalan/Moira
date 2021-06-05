@@ -1,6 +1,6 @@
 package com.minerbalan.moira.interactor
 
-import com.minerbalan.moira.domain.entity.Subscription
+import com.minerbalan.moira.domain.entity.SubscriptionEntity
 import com.minerbalan.moira.domain.repository.SubscriptionsRepository
 import com.minerbalan.moira.domain.repository.UsersRepository
 import com.minerbalan.moira.gateway.RssGateway
@@ -9,7 +9,6 @@ import com.minerbalan.moira.usecase.UseCaseResult
 import com.rometools.rome.io.FeedException
 import org.springframework.stereotype.Service
 import java.io.IOException
-import java.lang.IllegalArgumentException
 import java.time.LocalDateTime
 import kotlin.IllegalStateException
 
@@ -40,7 +39,7 @@ class SubscriptionInteractor(
         }
 
         if (subscription == null) {
-            val newSubscription = Subscription(
+            val newSubscription = SubscriptionEntity(
                 id = null,
                 url = url,
                 createdAt = LocalDateTime.now(),

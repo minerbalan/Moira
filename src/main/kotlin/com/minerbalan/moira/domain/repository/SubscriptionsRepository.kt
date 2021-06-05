@@ -1,17 +1,17 @@
 package com.minerbalan.moira.domain.repository
 
-import com.minerbalan.moira.domain.entity.Subscription
+import com.minerbalan.moira.domain.entity.SubscriptionEntity
 
 interface SubscriptionsRepository {
     /**
      * 新しくsubscriptionを追加する
      */
-    fun insertSubscription(subscription: Subscription)
+    fun insertSubscription(subscriptionEntity: SubscriptionEntity)
 
     /**
      * 購読リストを取得する.
      */
-    fun fetchSubscriptionList(): List<Subscription>
+    fun fetchSubscriptionList(): List<SubscriptionEntity>
 
     /**
      * 購読urlが既に存在しているか確認する
@@ -21,7 +21,7 @@ interface SubscriptionsRepository {
     /**
      * URLから購読Objectを取得する
      */
-    fun getSubscriptionByUrl(url: String): Subscription?
+    fun getSubscriptionByUrl(url: String): SubscriptionEntity?
 
     /**
      * ユーザーが購読しているか

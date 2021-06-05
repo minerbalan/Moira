@@ -1,13 +1,13 @@
 package com.minerbalan.moira.javaconfig
 
-import com.minerbalan.moira.domain.entity.User
+import com.minerbalan.moira.domain.entity.UserEntity
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 
-class UserDetailsImpl(private val user: User) : UserDetails {
+class UserDetailsImpl(private val userEntity: UserEntity) : UserDetails {
 
-    fun getUser(): User {
-        return user
+    fun getUser(): UserEntity {
+        return userEntity
     }
 
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
@@ -15,11 +15,11 @@ class UserDetailsImpl(private val user: User) : UserDetails {
     }
 
     override fun getPassword(): String {
-        return user.password
+        return userEntity.password
     }
 
     override fun getUsername(): String {
-        return user.email
+        return userEntity.email
     }
 
     override fun isAccountNonExpired(): Boolean {

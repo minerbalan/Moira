@@ -1,7 +1,7 @@
 package com.minerbalan.moira.database
 
 import com.minerbalan.moira.database.rowmapper.UserRowMapper
-import com.minerbalan.moira.domain.entity.User
+import com.minerbalan.moira.domain.entity.UserEntity
 import com.minerbalan.moira.domain.repository.UsersRepository
 import org.slf4j.LoggerFactory
 import org.springframework.jdbc.core.JdbcTemplate
@@ -12,9 +12,9 @@ import java.lang.Exception
 class UsersRepositoryImpl(private val jdbcTemplate: JdbcTemplate) : UsersRepository {
     private val logger = LoggerFactory.getLogger(this.javaClass)
 
-    override fun createUser(user: User) {
+    override fun createUser(userEntity: UserEntity) {
         val sql = "INSERT INTO users(user_name, email, password, created_at) VALUES (?,?,?,?)"
-        jdbcTemplate.update(sql, user.userName, user.email, user.password, user.createdAt)
+        jdbcTemplate.update(sql, userEntity.userName, userEntity.email, userEntity.password, userEntity.createdAt)
     }
 
     override fun existsUser(email: String): Boolean {
@@ -23,7 +23,7 @@ class UsersRepositoryImpl(private val jdbcTemplate: JdbcTemplate) : UsersReposit
         return userList.isNotEmpty()
     }
 
-    override fun findUserFromEmail(email: String): User? {
+    override fun findUserFromEmail(email: String): UserEntity? {
         val sql = "SELECT * FROM users WHERE email = ?"
         try {
             val userList = jdbcTemplate.query(sql, UserRowMapper(), email)

@@ -1,7 +1,7 @@
 package com.minerbalan.moira.database
 
 import com.minerbalan.moira.database.rowmapper.ArticleRowMapper
-import com.minerbalan.moira.domain.entity.Article
+import com.minerbalan.moira.domain.entity.ArticleEntity
 import com.minerbalan.moira.domain.repository.ArticlesRepository
 import org.slf4j.LoggerFactory
 import org.springframework.jdbc.core.JdbcTemplate
@@ -20,7 +20,7 @@ class ArticlesRepositoryImpl(private val jdbcTemplate: JdbcTemplate) : ArticlesR
     /**
      * サムネイルがnullの項目を取得する
      */
-    override fun findByThumbnailIsNull(): List<Article> {
+    override fun findByThumbnailIsNull(): List<ArticleEntity> {
         val sql = "SELECT * FROM articles WHERE thumbnail IS NULL"
         return jdbcTemplate.query(sql, ArticleRowMapper())
     }
@@ -28,12 +28,12 @@ class ArticlesRepositoryImpl(private val jdbcTemplate: JdbcTemplate) : ArticlesR
     /**
      * Articleを挿入
      */
-    override fun bulkInsertOrIgnoreArticles(articleList: List<Article>) {
-        if (articleList.isEmpty()) {
+    override fun bulkInsertOrIgnoreArticles(articleEntityList: List<ArticleEntity>) {
+        if (articleEntityList.isEmpty()) {
             return
         }
         //100件ずつinsertしていく
-        val queue = ArrayDeque(articleList)
+        val queue = ArrayDeque(articleEntityList)
         try {
             while (!queue.isEmpty()) {
                 val sqlBuilder = StringBuilder()
@@ -47,12 +47,12 @@ class ArticlesRepositoryImpl(private val jdbcTemplate: JdbcTemplate) : ArticlesR
                     run {
                         var parameterPosition = 0
                         for (j in 0 until parameterSize) {
-                            val parameterArticle: Article = queue.remove()
-                            ps.setLong(++parameterPosition, parameterArticle.subscriptionId)
-                            ps.setString(++parameterPosition, parameterArticle.url)
-                            ps.setString(++parameterPosition, parameterArticle.title)
-                            ps.setString(++parameterPosition, parameterArticle.description)
-                            ps.setTimestamp(++parameterPosition, Timestamp.valueOf(parameterArticle.publishedAt))
+                            val parameterArticleEntity: ArticleEntity = queue.remove()
+                            ps.setLong(++parameterPosition, parameterArticleEntity.subscriptionId)
+                            ps.setString(++parameterPosition, parameterArticleEntity.url)
+                            ps.setString(++parameterPosition, parameterArticleEntity.title)
+                            ps.setString(++parameterPosition, parameterArticleEntity.description)
+                            ps.setTimestamp(++parameterPosition, Timestamp.valueOf(parameterArticleEntity.publishedAt))
                         }
                     }
                 }
@@ -65,11 +65,11 @@ class ArticlesRepositoryImpl(private val jdbcTemplate: JdbcTemplate) : ArticlesR
     /**
      * サムネイルをbulk update.
      */
-    override fun bulkUpdateThumbnailArticles(articleList: List<Article>) {
-        if (articleList.isEmpty()) {
+    override fun bulkUpdateThumbnailArticles(articleEntityList: List<ArticleEntity>) {
+        if (articleEntityList.isEmpty()) {
             return
         }
-        val queue = ArrayDeque(articleList)
+        val queue = ArrayDeque(articleEntityList)
 
         try {
             while (!queue.isEmpty()) {
@@ -89,11 +89,11 @@ class ArticlesRepositoryImpl(private val jdbcTemplate: JdbcTemplate) : ArticlesR
                     run {
                         var parameterPosition = 0
                         for (j in 0 until parameterSize) {
-                            val parameterArticle: Article = queue.remove()
-                            val articleId = parameterArticle.id ?: throw RuntimeException("Article Id is Null")
+                            val parameterArticleEntity: ArticleEntity = queue.remove()
+                            val articleId = parameterArticleEntity.id ?: throw RuntimeException("Article Id is Null")
                             // WHEN ... THEN... 句
                             ps.setLong(++parameterPosition, articleId)
-                            ps.setString(++parameterPosition, parameterArticle.thumbnail)
+                            ps.setString(++parameterPosition, parameterArticleEntity.thumbnail)
                             var space = parameterPosition + (parameterSize - j - 1) * 2 + j
                             ps.setLong(++space, articleId)
                         }
@@ -105,7 +105,7 @@ class ArticlesRepositoryImpl(private val jdbcTemplate: JdbcTemplate) : ArticlesR
         }
     }
 
-    override fun fetchArticleLatest(email: String, limit: Int, offset: Int): List<Article> {
+    override fun fetchArticleLatest(email: String, limit: Int, offset: Int): List<ArticleEntity> {
         val stringBuilder = StringBuilder()
         stringBuilder.appendln("SELECT articles.* FROM articles ")
         stringBuilder.appendln("    INNER JOIN users_subscriptions US ")
@@ -116,7 +116,7 @@ class ArticlesRepositoryImpl(private val jdbcTemplate: JdbcTemplate) : ArticlesR
         stringBuilder.appendln("ORDER BY published_at desc ")
         stringBuilder.appendln("LIMIT ? OFFSET ? ")
 
-        return jdbcTemplate.query<Article>(stringBuilder.toString(), ArticleRowMapper(), email, limit, offset)
+        return jdbcTemplate.query<ArticleEntity>(stringBuilder.toString(), ArticleRowMapper(), email, limit, offset)
     }
 
     override fun countArticle(email: String): Long {

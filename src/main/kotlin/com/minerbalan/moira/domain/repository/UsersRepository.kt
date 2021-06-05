@@ -1,11 +1,11 @@
 package com.minerbalan.moira.domain.repository
 
-import com.minerbalan.moira.domain.entity.User
+import com.minerbalan.moira.domain.entity.UserEntity
 
 interface UsersRepository {
-    fun createUser(user: User)
+    fun createUser(userEntity: UserEntity)
 
     fun existsUser(email: String): Boolean
 
-    fun findUserFromEmail(email: String): User?
+    fun findUserFromEmail(email: String): UserEntity?
 }

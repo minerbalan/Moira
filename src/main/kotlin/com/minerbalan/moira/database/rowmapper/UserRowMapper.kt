@@ -1,12 +1,12 @@
 package com.minerbalan.moira.database.rowmapper
 
-import com.minerbalan.moira.domain.entity.User
+import com.minerbalan.moira.domain.entity.UserEntity
 import org.springframework.jdbc.core.RowMapper
 import java.sql.ResultSet
 
-class UserRowMapper : RowMapper<User> {
-    override fun mapRow(rs: ResultSet, rowNum: Int): User? {
-        return User(
+class UserRowMapper : RowMapper<UserEntity> {
+    override fun mapRow(rs: ResultSet, rowNum: Int): UserEntity? {
+        return UserEntity(
                 id = rs.getLong("id"),
                 userName = rs.getString("user_name"),
                 email = rs.getString("email"),

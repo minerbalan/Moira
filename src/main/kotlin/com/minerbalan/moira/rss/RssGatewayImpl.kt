@@ -1,7 +1,7 @@
 package com.minerbalan.moira.rss
 
-import com.minerbalan.moira.domain.entity.Article
-import com.minerbalan.moira.domain.entity.Subscription
+import com.minerbalan.moira.domain.entity.ArticleEntity
+import com.minerbalan.moira.domain.entity.SubscriptionEntity
 import com.minerbalan.moira.gateway.RssGateway
 import com.rometools.rome.feed.synd.SyndFeed
 import com.rometools.rome.io.FeedException
@@ -22,9 +22,9 @@ import java.util.ArrayList
 class RssGatewayImpl : RssGateway {
     private val logger = LoggerFactory.getLogger(this.javaClass)
 
-    override fun fetchArticleFromSubscriptions(subscriptionList: List<Subscription>): List<Article> {
-        val articleList = ArrayList<Article>()
-        for (subscription in subscriptionList) {
+    override fun fetchArticleFromSubscriptions(subscriptionEntityList: List<SubscriptionEntity>): List<ArticleEntity> {
+        val articleList = ArrayList<ArticleEntity>()
+        for (subscription in subscriptionEntityList) {
             val subscriptionId = subscription.id ?: continue
             val url = subscription.url
             val httpUriRequest: HttpUriRequest = HttpGet(url)
@@ -72,10 +72,10 @@ class RssGatewayImpl : RssGateway {
      * @param subscriptionId 取得したFeedのSubscriptionId
      * @return 変換したArticle.
      */
-    private fun getArticleFromFeed(syndFeed: SyndFeed, subscriptionId: Long): List<Article> {
-        val articleList = ArrayList<Article>()
+    private fun getArticleFromFeed(syndFeed: SyndFeed, subscriptionId: Long): List<ArticleEntity> {
+        val articleList = ArrayList<ArticleEntity>()
         for (feed in syndFeed.entries) {
-            val article = Article(subscriptionId = subscriptionId)
+            val article = ArticleEntity(subscriptionId = subscriptionId)
             article.url = feed.uri
             article.title = feed.title
             article.description = feed.description.value

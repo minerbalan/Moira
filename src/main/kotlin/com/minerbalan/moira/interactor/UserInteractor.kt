@@ -1,6 +1,6 @@
 package com.minerbalan.moira.interactor
 
-import com.minerbalan.moira.domain.entity.User
+import com.minerbalan.moira.domain.entity.UserEntity
 import com.minerbalan.moira.domain.repository.UsersRepository
 import com.minerbalan.moira.usecase.UseCaseResult
 import com.minerbalan.moira.usecase.UserUseCase
@@ -17,7 +17,7 @@ class UserInteractor(
         if (usersRepository.existsUser(email)) {
             return InteractorResult.createErrorResult("すでにユーザーが存在しています")
         }
-        val user = User(
+        val user = UserEntity(
             id = null, userName = username, email = email,
             password = passwordEncoder.encode(rawPassword), createdAt = LocalDateTime.now(), updatedAt = null
         )
@@ -29,7 +29,7 @@ class UserInteractor(
         return usersRepository.existsUser(email)
     }
 
-    override fun findUserFromEmail(email: String): User? {
+    override fun findUserFromEmail(email: String): UserEntity? {
         return usersRepository.findUserFromEmail(email)
     }
 }

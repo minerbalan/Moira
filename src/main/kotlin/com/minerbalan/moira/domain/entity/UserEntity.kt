@@ -2,7 +2,7 @@ package com.minerbalan.moira.domain.entity
 
 import java.time.LocalDateTime
 
-data class User(
+data class UserEntity(
     var id: Long?,
     var userName: String,
     var email: String,

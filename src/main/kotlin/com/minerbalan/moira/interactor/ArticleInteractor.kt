@@ -1,13 +1,13 @@
 package com.minerbalan.moira.interactor
 
-import com.minerbalan.moira.domain.entity.Article
+import com.minerbalan.moira.domain.entity.ArticleEntity
 import com.minerbalan.moira.domain.repository.ArticlesRepository
 import com.minerbalan.moira.usecase.ArticleUseCase
 import org.springframework.stereotype.Service
 
 @Service
 class ArticleInteractor(private val articlesRepository: ArticlesRepository) : ArticleUseCase {
-    override fun fetchArticleLatest(email: String, limit: Int, offset: Int): List<Article> {
+    override fun fetchArticleLatest(email: String, limit: Int, offset: Int): List<ArticleEntity> {
         return articlesRepository.fetchArticleLatest(email, limit, offset)
     }
 

@@ -2,7 +2,7 @@ package com.minerbalan.moira.domain.entity
 
 import java.time.LocalDateTime
 
-data class Subscription(
+data class SubscriptionEntity(
     var id: Long?,
 
     var url: String,
