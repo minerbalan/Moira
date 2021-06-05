@@ -1,4 +1,4 @@
-package com.minerbalan.moira.usecase
+package com.minerbalan.moira.usecase.article
 
 import com.minerbalan.moira.domain.entity.ArticleEntity
 

@@ -1,4 +1,4 @@
-package com.minerbalan.moira.usecase
+package com.minerbalan.moira.usecase.rss
 
 interface RssUseCase {
     /**

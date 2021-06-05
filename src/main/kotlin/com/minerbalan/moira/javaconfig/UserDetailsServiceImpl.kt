@@ -1,6 +1,6 @@
 package com.minerbalan.moira.javaconfig
 
-import com.minerbalan.moira.usecase.UserUseCase
+import com.minerbalan.moira.usecase.user.UserUseCase
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException

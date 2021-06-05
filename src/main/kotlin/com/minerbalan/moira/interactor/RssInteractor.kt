@@ -4,7 +4,7 @@ import com.minerbalan.moira.domain.repository.ArticlesRepository
 import com.minerbalan.moira.domain.repository.SubscriptionsRepository
 import com.minerbalan.moira.gateway.RssGateway
 import com.minerbalan.moira.gateway.ScrapingGateway
-import com.minerbalan.moira.usecase.RssUseCase
+import com.minerbalan.moira.usecase.rss.RssUseCase
 import org.springframework.stereotype.Service
 
 @Service

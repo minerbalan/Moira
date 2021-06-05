@@ -1,6 +1,6 @@
 package com.minerbalan.moira.web.controller
 
-import com.minerbalan.moira.usecase.SubscriptionUseCase
+import com.minerbalan.moira.usecase.subscription.SubscriptionUseCase
 import com.minerbalan.moira.web.request.SubscriptionPostRequest
 import com.minerbalan.moira.web.response.BasicResponse
 import org.springframework.http.HttpStatus

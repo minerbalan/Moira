@@ -1,6 +1,6 @@
 package com.minerbalan.moira.web.controller
 
-import com.minerbalan.moira.usecase.ArticleUseCase
+import com.minerbalan.moira.usecase.article.ArticleUseCase
 import com.minerbalan.moira.web.request.ArticleGetRequest
 import com.minerbalan.moira.web.response.ArticleResponse
 import org.springframework.security.core.annotation.AuthenticationPrincipal

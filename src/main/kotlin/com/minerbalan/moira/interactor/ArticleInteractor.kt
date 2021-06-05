@@ -2,7 +2,7 @@ package com.minerbalan.moira.interactor
 
 import com.minerbalan.moira.domain.entity.ArticleEntity
 import com.minerbalan.moira.domain.repository.ArticlesRepository
-import com.minerbalan.moira.usecase.ArticleUseCase
+import com.minerbalan.moira.usecase.article.ArticleUseCase
 import org.springframework.stereotype.Service
 
 @Service

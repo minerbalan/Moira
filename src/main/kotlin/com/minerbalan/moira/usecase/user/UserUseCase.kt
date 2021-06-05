@@ -1,6 +1,7 @@
-package com.minerbalan.moira.usecase
+package com.minerbalan.moira.usecase.user
 
 import com.minerbalan.moira.domain.entity.UserEntity
+import com.minerbalan.moira.usecase.UseCaseResult
 
 interface UserUseCase {
     fun createUser(username: String, email: String, rawPassword: String) : UseCaseResult

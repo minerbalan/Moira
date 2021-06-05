@@ -3,7 +3,7 @@ package com.minerbalan.moira.interactor
 import com.minerbalan.moira.domain.entity.UserEntity
 import com.minerbalan.moira.domain.repository.UsersRepository
 import com.minerbalan.moira.usecase.UseCaseResult
-import com.minerbalan.moira.usecase.UserUseCase
+import com.minerbalan.moira.usecase.user.UserUseCase
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime

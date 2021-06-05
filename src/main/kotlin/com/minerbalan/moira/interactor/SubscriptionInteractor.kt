@@ -4,7 +4,7 @@ import com.minerbalan.moira.domain.entity.SubscriptionEntity
 import com.minerbalan.moira.domain.repository.SubscriptionsRepository
 import com.minerbalan.moira.domain.repository.UsersRepository
 import com.minerbalan.moira.gateway.RssGateway
-import com.minerbalan.moira.usecase.SubscriptionUseCase
+import com.minerbalan.moira.usecase.subscription.SubscriptionUseCase
 import com.minerbalan.moira.usecase.UseCaseResult
 import com.rometools.rome.io.FeedException
 import org.springframework.stereotype.Service

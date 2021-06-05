@@ -1,6 +1,6 @@
 package com.minerbalan.moira.web.controller
 
-import com.minerbalan.moira.usecase.UserUseCase
+import com.minerbalan.moira.usecase.user.UserUseCase
 import com.minerbalan.moira.web.request.UserCreatePostRequest
 import com.minerbalan.moira.web.response.BasicResponse
 import org.springframework.http.HttpStatus

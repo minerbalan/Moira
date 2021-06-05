@@ -1,6 +1,6 @@
 package com.minerbalan.moira.task
 
-import com.minerbalan.moira.usecase.RssUseCase
+import com.minerbalan.moira.usecase.rss.RssUseCase
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
