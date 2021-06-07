@@ -6,8 +6,10 @@ import com.minerbalan.moira.gateway.RssGateway
 import com.minerbalan.moira.gateway.ScrapingGateway
 import com.minerbalan.moira.usecase.rss.RssUseCase
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
+@Transactional
 class RssInteractor(
     private val subscriptionsRepository: SubscriptionsRepository,
     private val articlesRepository: ArticlesRepository,
@@ -23,8 +25,7 @@ class RssInteractor(
         articlesRepository.bulkInsertOrIgnoreArticles(articleList)
         val thumbnailNullArticle = articlesRepository.findByThumbnailIsNull()
         for (article in thumbnailNullArticle) {
-            val articleUrl = article.url ?: continue
-            var thumbnailUrl = scrapingGateway.fetchOgpImageProperties(articleUrl)
+            var thumbnailUrl = scrapingGateway.fetchOgpImageProperties(article.url)
             if (thumbnailUrl == null) {
                 thumbnailUrl = ""
             }

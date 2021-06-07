@@ -1,15 +1,19 @@
 package com.minerbalan.moira.database
 
-import com.minerbalan.moira.database.rowmapper.ArticleRowMapper
+import com.minerbalan.moira.database.table.ArticlesTable
+import com.minerbalan.moira.database.table.UsersSubscriptionsTable
+import com.minerbalan.moira.database.table.UsersTable
+import com.minerbalan.moira.database.table.toArticleEntity
 import com.minerbalan.moira.domain.entity.ArticleEntity
 import com.minerbalan.moira.domain.repository.ArticlesRepository
+import org.jetbrains.exposed.sql.*
 import org.slf4j.LoggerFactory
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Repository
-import java.lang.RuntimeException
 import java.sql.PreparedStatement
 import java.sql.Timestamp
 import java.util.*
+import kotlin.collections.ArrayList
 
 @Repository
 class ArticlesRepositoryImpl(private val jdbcTemplate: JdbcTemplate) : ArticlesRepository {
@@ -21,8 +25,12 @@ class ArticlesRepositoryImpl(private val jdbcTemplate: JdbcTemplate) : ArticlesR
      * サムネイルがnullの項目を取得する
      */
     override fun findByThumbnailIsNull(): List<ArticleEntity> {
-        val sql = "SELECT * FROM articles WHERE thumbnail IS NULL"
-        return jdbcTemplate.query(sql, ArticleRowMapper())
+        val result = ArrayList<ArticleEntity>()
+        val query = ArticlesTable.select { ArticlesTable.thumbnail eq null }
+        for (item in query) {
+            result.add(item.toArticleEntity())
+        }
+        return result
     }
 
     /**
@@ -106,32 +114,46 @@ class ArticlesRepositoryImpl(private val jdbcTemplate: JdbcTemplate) : ArticlesR
     }
 
     override fun fetchArticleLatest(email: String, limit: Int, offset: Int): List<ArticleEntity> {
-        val stringBuilder = StringBuilder()
-        stringBuilder.appendln("SELECT articles.* FROM articles ")
-        stringBuilder.appendln("    INNER JOIN users_subscriptions US ")
-        stringBuilder.appendln("        ON articles.subscription_id = US.subscriptions_id ")
-        stringBuilder.appendln("    INNER JOIN users ")
-        stringBuilder.appendln("        ON US.users_id = users.id ")
-        stringBuilder.appendln("            AND users.email = ? ")
-        stringBuilder.appendln("ORDER BY published_at desc ")
-        stringBuilder.appendln("LIMIT ? OFFSET ? ")
+        val result = ArrayList<ArticleEntity>()
+        val resultRow = ArticlesTable
+            .join(
+                otherTable = UsersSubscriptionsTable,
+                joinType = JoinType.INNER,
+                onColumn = UsersSubscriptionsTable.subscriptionsId,
+                otherColumn = ArticlesTable.subscriptionId
+            )
+            .join(
+                otherTable = UsersTable,
+                joinType = JoinType.INNER,
+                onColumn = UsersTable.id,
+                otherColumn = UsersSubscriptionsTable.usersId
+            )
+            .select { UsersTable.email eq email }
+            .limit(limit, offset = offset.toLong())
+            .orderBy(ArticlesTable.publishedAt, SortOrder.DESC)
 
-        return jdbcTemplate.query<ArticleEntity>(stringBuilder.toString(), ArticleRowMapper(), email, limit, offset)
+        for (item in resultRow) {
+            result.add(item.toArticleEntity())
+        }
+
+        return result
     }
 
     override fun countArticle(email: String): Long {
-        val stringBuilder = StringBuilder()
-        stringBuilder.appendln("SELECT count(articles.id) as ARTICLES_COUNT FROM articles ")
-        stringBuilder.appendln("    INNER JOIN users_subscriptions US ")
-        stringBuilder.appendln("        ON articles.subscription_id = US.subscriptions_id ")
-        stringBuilder.appendln("    INNER JOIN users ")
-        stringBuilder.appendln("        ON US.users_id = users.id ")
-        stringBuilder.appendln("            AND users.email = ? ")
-        val sqlResult = jdbcTemplate.queryForMap(stringBuilder.toString(), email)
-        val articleCount = sqlResult["ARTICLES_COUNT"]
-        if(articleCount is Long){
-            return articleCount
-        }
-        throw IllegalStateException("記事の取得中にエラー")
+        return ArticlesTable
+            .join(
+                otherTable = UsersSubscriptionsTable,
+                joinType = JoinType.INNER,
+                onColumn = UsersSubscriptionsTable.subscriptionsId,
+                otherColumn = ArticlesTable.subscriptionId
+            )
+            .join(
+                otherTable = UsersTable,
+                joinType = JoinType.INNER,
+                onColumn = UsersTable.id,
+                otherColumn = UsersSubscriptionsTable.usersId
+            )
+            .select { UsersTable.email eq email }
+            .count()
     }
 }
