@@ -7,15 +7,15 @@ data class ArticleEntity(
 
     var subscriptionId: Long,
 
-    var url: String? = null,
+    var url: String,
 
-    var title: String? = null,
+    var title: String,
 
-    var description: String? = null,
+    var description: String?,
 
     var thumbnail: String? = null,
 
-    var createdAt: LocalDateTime? = null,
+    var createdAt: LocalDateTime,
 
     var publishedAt: LocalDateTime? = null
 )

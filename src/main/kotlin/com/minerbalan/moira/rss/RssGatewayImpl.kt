@@ -75,10 +75,13 @@ class RssGatewayImpl : RssGateway {
     private fun getArticleFromFeed(syndFeed: SyndFeed, subscriptionId: Long): List<ArticleEntity> {
         val articleList = ArrayList<ArticleEntity>()
         for (feed in syndFeed.entries) {
-            val article = ArticleEntity(subscriptionId = subscriptionId)
-            article.url = feed.uri
-            article.title = feed.title
-            article.description = feed.description.value
+            val article = ArticleEntity(
+                subscriptionId = subscriptionId,
+                url = feed.uri,
+                title = feed.title,
+                description = feed.description.value,
+                createdAt = LocalDateTime.now()
+            )
             val publishDate = feed.publishedDate
             //publishDateが存在しない場合、現在時刻をpublishDateにする
             if (publishDate == null) {
