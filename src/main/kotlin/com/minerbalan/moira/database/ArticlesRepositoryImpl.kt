@@ -5,7 +5,8 @@ import com.minerbalan.moira.database.table.UsersSubscriptionsTable
 import com.minerbalan.moira.database.table.UsersTable
 import com.minerbalan.moira.database.table.toArticleEntity
 import com.minerbalan.moira.domain.entity.ArticleEntity
-import com.minerbalan.moira.domain.repository.ArticlesRepository
+import com.minerbalan.moira.domain.repository.article.ArticlesRepository
+import com.minerbalan.moira.domain.repository.article.InsertArticleData
 import org.jetbrains.exposed.sql.*
 import org.slf4j.LoggerFactory
 import org.springframework.jdbc.core.JdbcTemplate
@@ -36,12 +37,12 @@ class ArticlesRepositoryImpl(private val jdbcTemplate: JdbcTemplate) : ArticlesR
     /**
      * Articleを挿入
      */
-    override fun bulkInsertOrIgnoreArticles(articleEntityList: List<ArticleEntity>) {
-        if (articleEntityList.isEmpty()) {
+    override fun bulkInsertOrIgnoreArticles(insertArticleList: List<InsertArticleData>) {
+        if (insertArticleList.isEmpty()) {
             return
         }
         //100件ずつinsertしていく
-        val queue = ArrayDeque(articleEntityList)
+        val queue = ArrayDeque(insertArticleList)
         try {
             while (!queue.isEmpty()) {
                 val sqlBuilder = StringBuilder()
@@ -55,12 +56,12 @@ class ArticlesRepositoryImpl(private val jdbcTemplate: JdbcTemplate) : ArticlesR
                     run {
                         var parameterPosition = 0
                         for (j in 0 until parameterSize) {
-                            val parameterArticleEntity: ArticleEntity = queue.remove()
-                            ps.setLong(++parameterPosition, parameterArticleEntity.subscriptionId)
-                            ps.setString(++parameterPosition, parameterArticleEntity.url)
-                            ps.setString(++parameterPosition, parameterArticleEntity.title)
-                            ps.setString(++parameterPosition, parameterArticleEntity.description)
-                            ps.setTimestamp(++parameterPosition, Timestamp.valueOf(parameterArticleEntity.publishedAt))
+                            val parameterArticleData: InsertArticleData = queue.remove()
+                            ps.setLong(++parameterPosition, parameterArticleData.subscriptionId)
+                            ps.setString(++parameterPosition, parameterArticleData.url)
+                            ps.setString(++parameterPosition, parameterArticleData.title)
+                            ps.setString(++parameterPosition, parameterArticleData.description)
+                            ps.setTimestamp(++parameterPosition, Timestamp.valueOf(parameterArticleData.publishedAt))
                         }
                     }
                 }
@@ -98,7 +99,7 @@ class ArticlesRepositoryImpl(private val jdbcTemplate: JdbcTemplate) : ArticlesR
                         var parameterPosition = 0
                         for (j in 0 until parameterSize) {
                             val parameterArticleEntity: ArticleEntity = queue.remove()
-                            val articleId = parameterArticleEntity.id ?: throw RuntimeException("Article Id is Null")
+                            val articleId = parameterArticleEntity.id
                             // WHEN ... THEN... 句
                             ps.setLong(++parameterPosition, articleId)
                             ps.setString(++parameterPosition, parameterArticleEntity.thumbnail)

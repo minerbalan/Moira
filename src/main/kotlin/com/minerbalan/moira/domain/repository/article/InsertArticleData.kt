@@ -1,10 +1,8 @@
-package com.minerbalan.moira.domain.entity
+package com.minerbalan.moira.domain.repository.article
 
 import java.time.LocalDateTime
 
-data class ArticleEntity(
-    var id: Long,
-
+data class InsertArticleData(
     var subscriptionId: Long,
 
     var url: String,
@@ -13,7 +11,7 @@ data class ArticleEntity(
 
     var description: String?,
 
-    var thumbnail: String? = null,
+    var thumbnail: String? ,
 
     var createdAt: LocalDateTime,
 

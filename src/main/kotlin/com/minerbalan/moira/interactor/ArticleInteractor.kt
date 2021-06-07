@@ -1,6 +1,6 @@
 package com.minerbalan.moira.interactor
 
-import com.minerbalan.moira.domain.repository.ArticlesRepository
+import com.minerbalan.moira.domain.repository.article.ArticlesRepository
 import com.minerbalan.moira.usecase.article.ArticleOutputData
 import com.minerbalan.moira.usecase.article.ArticleUseCase
 import org.springframework.stereotype.Service
@@ -13,10 +13,9 @@ class ArticleInteractor(private val articlesRepository: ArticlesRepository) : Ar
         val articleEntityList = articlesRepository.fetchArticleLatest(email, limit, offset)
         val result = ArrayList<ArticleOutputData>()
         articleEntityList.forEach {
-            val id = it.id ?: return@forEach
             result.add(
                 ArticleOutputData(
-                    id = id,
+                    id = it.id,
                     title = it.title,
                     url = it.url,
                     description = it.description,

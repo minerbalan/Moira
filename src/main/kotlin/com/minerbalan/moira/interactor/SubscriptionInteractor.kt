@@ -3,7 +3,7 @@ package com.minerbalan.moira.interactor
 import com.minerbalan.moira.domain.entity.SubscriptionEntity
 import com.minerbalan.moira.domain.repository.SubscriptionsRepository
 import com.minerbalan.moira.domain.repository.UsersRepository
-import com.minerbalan.moira.gateway.RssGateway
+import com.minerbalan.moira.gateway.rss.RssGateway
 import com.minerbalan.moira.usecase.subscription.SubscriptionUseCase
 import com.minerbalan.moira.usecase.UseCaseResult
 import com.rometools.rome.io.FeedException
@@ -54,7 +54,7 @@ class SubscriptionInteractor(
             throw IllegalStateException()
         }
 
-        val subscriptionName = name ?: feedName ?: "default subscription name"
+        val subscriptionName = name ?: feedName
 
         subscriptionsRepository.linkingUserAndSubscription(userId, subscriptionId, subscriptionName)
         return InteractorResult.createSuccessResult()

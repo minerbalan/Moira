@@ -1,8 +1,8 @@
 package com.minerbalan.moira.rss
 
-import com.minerbalan.moira.domain.entity.ArticleEntity
 import com.minerbalan.moira.domain.entity.SubscriptionEntity
-import com.minerbalan.moira.gateway.RssGateway
+import com.minerbalan.moira.gateway.rss.RssArticleOutputData
+import com.minerbalan.moira.gateway.rss.RssGateway
 import com.rometools.rome.feed.synd.SyndFeed
 import com.rometools.rome.io.FeedException
 import com.rometools.rome.io.SyndFeedInput
@@ -22,8 +22,8 @@ import java.util.ArrayList
 class RssGatewayImpl : RssGateway {
     private val logger = LoggerFactory.getLogger(this.javaClass)
 
-    override fun fetchArticleFromSubscriptions(subscriptionEntityList: List<SubscriptionEntity>): List<ArticleEntity> {
-        val articleList = ArrayList<ArticleEntity>()
+    override fun fetchArticleFromSubscriptions(subscriptionEntityList: List<SubscriptionEntity>): List<RssArticleOutputData> {
+        val articleList = ArrayList<RssArticleOutputData>()
         for (subscription in subscriptionEntityList) {
             val subscriptionId = subscription.id ?: continue
             val url = subscription.url
@@ -72,23 +72,24 @@ class RssGatewayImpl : RssGateway {
      * @param subscriptionId 取得したFeedのSubscriptionId
      * @return 変換したArticle.
      */
-    private fun getArticleFromFeed(syndFeed: SyndFeed, subscriptionId: Long): List<ArticleEntity> {
-        val articleList = ArrayList<ArticleEntity>()
+    private fun getArticleFromFeed(syndFeed: SyndFeed, subscriptionId: Long): List<RssArticleOutputData> {
+        val articleList = ArrayList<RssArticleOutputData>()
         for (feed in syndFeed.entries) {
-            val article = ArticleEntity(
+            //publishDateが存在しない場合、現在時刻をpublishDateにする
+            val publishDate: LocalDateTime = if (feed.publishedDate == null) {
+                LocalDateTime.now()
+            } else {
+                LocalDateTime.ofInstant(feed.publishedDate.toInstant(), ZoneId.of("Asia/Tokyo"))
+            }
+            val article = RssArticleOutputData(
                 subscriptionId = subscriptionId,
                 url = feed.uri,
                 title = feed.title,
                 description = feed.description.value,
-                createdAt = LocalDateTime.now()
+                createdAt = LocalDateTime.now(),
+                publishedAt = publishDate
             )
-            val publishDate = feed.publishedDate
-            //publishDateが存在しない場合、現在時刻をpublishDateにする
-            if (publishDate == null) {
-                article.publishedAt = LocalDateTime.now()
-            } else {
-                article.publishedAt = LocalDateTime.ofInstant(publishDate.toInstant(), ZoneId.of("Asia/Tokyo"))
-            }
+
             articleList.add(article)
         }
         return articleList

@@ -1,11 +1,11 @@
-package com.minerbalan.moira.domain.repository
+package com.minerbalan.moira.domain.repository.article
 
 import com.minerbalan.moira.domain.entity.ArticleEntity
 
 interface ArticlesRepository {
     fun findByThumbnailIsNull(): List<ArticleEntity>
 
-    fun bulkInsertOrIgnoreArticles(articleEntityList: List<ArticleEntity>)
+    fun bulkInsertOrIgnoreArticles(insertArticleList: List<InsertArticleData>)
 
     fun bulkUpdateThumbnailArticles(articleEntityList: List<ArticleEntity>)
 
