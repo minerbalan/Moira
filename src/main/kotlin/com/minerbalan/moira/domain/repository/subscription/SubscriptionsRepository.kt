@@ -1,12 +1,13 @@
-package com.minerbalan.moira.domain.repository
+package com.minerbalan.moira.domain.repository.subscription
 
 import com.minerbalan.moira.domain.entity.SubscriptionEntity
+import java.time.LocalDateTime
 
 interface SubscriptionsRepository {
     /**
      * 新しくsubscriptionを追加する
      */
-    fun insertSubscription(subscriptionEntity: SubscriptionEntity)
+    fun insertSubscription(subscriptionData: InsertSubscriptionData)
 
     /**
      * 購読リストを取得する.
@@ -31,5 +32,5 @@ interface SubscriptionsRepository {
     /**
      * ユーザーと購読を紐づける
      */
-    fun linkingUserAndSubscription(userId: Long, subscriptionId: Long, subscriptionName: String)
+    fun linkingUserAndSubscription(userId: Long, subscriptionId: Long, subscriptionName: String, createdAt: LocalDateTime)
 }

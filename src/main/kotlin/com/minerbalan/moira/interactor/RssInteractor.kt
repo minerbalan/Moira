@@ -1,7 +1,7 @@
 package com.minerbalan.moira.interactor
 
 import com.minerbalan.moira.domain.repository.article.ArticlesRepository
-import com.minerbalan.moira.domain.repository.SubscriptionsRepository
+import com.minerbalan.moira.domain.repository.subscription.SubscriptionsRepository
 import com.minerbalan.moira.gateway.rss.RssGateway
 import com.minerbalan.moira.gateway.ScrapingGateway
 import com.minerbalan.moira.gateway.rss.toInsertArticleData

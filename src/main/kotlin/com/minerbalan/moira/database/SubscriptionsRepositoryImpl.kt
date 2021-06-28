@@ -1,8 +1,13 @@
 package com.minerbalan.moira.database
 
 import com.minerbalan.moira.database.rowmapper.SubscriptionRowMapper
+import com.minerbalan.moira.database.table.SubscriptionsTable
+import com.minerbalan.moira.database.table.UsersSubscriptionsTable
+import com.minerbalan.moira.database.table.toSubscriptionEntity
 import com.minerbalan.moira.domain.entity.SubscriptionEntity
-import com.minerbalan.moira.domain.repository.SubscriptionsRepository
+import com.minerbalan.moira.domain.repository.subscription.InsertSubscriptionData
+import com.minerbalan.moira.domain.repository.subscription.SubscriptionsRepository
+import org.jetbrains.exposed.sql.*
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Repository
 import java.time.LocalDateTime
@@ -12,21 +17,26 @@ class SubscriptionsRepositoryImpl(private val jdbcTemplate: JdbcTemplate) : Subs
     /**
      * 新しくsubscriptionを追加する
      */
-    override fun insertSubscription(subscriptionEntity: SubscriptionEntity) {
-        jdbcTemplate.update(
-            "INSERT INTO subscriptions(url, created_at, last_fetched_at) VALUES (?,?,?)",
-            subscriptionEntity.url, subscriptionEntity.createdAt, subscriptionEntity.lastFetchedAt
-        )
+    override fun insertSubscription(subscriptionData: InsertSubscriptionData) {
+        SubscriptionsTable.insert {
+            it[url] = subscriptionData.url
+            it[createdAt] = subscriptionData.createdAt
+            it[lastFetchedAt] = subscriptionData.lastFetchedAt
+        }
     }
 
     /**
      * 購読リストを取得する.
      */
     override fun fetchSubscriptionList(): List<SubscriptionEntity> {
-        return jdbcTemplate.query(
-            "SELECT * FROM subscriptions WHERE deleted_at IS NULL ORDER BY created_at DESC",
-            SubscriptionRowMapper()
-        )
+        val query = SubscriptionsTable
+            .select { SubscriptionsTable.deletedAt eq null }
+            .orderBy(SubscriptionsTable.createdAt, SortOrder.DESC)
+        val result = ArrayList<SubscriptionEntity>()
+        for (item in query) {
+            result.add(item.toSubscriptionEntity())
+        }
+        return result;
     }
 
     override fun existsSubscription(url: String): Boolean {
@@ -35,29 +45,30 @@ class SubscriptionsRepositoryImpl(private val jdbcTemplate: JdbcTemplate) : Subs
     }
 
     override fun getSubscriptionByUrl(url: String): SubscriptionEntity? {
-        val list = jdbcTemplate.query(
-            "SELECT * FROM subscriptions WHERE url = ? AND deleted_at IS NULL ORDER BY created_at DESC",
-            SubscriptionRowMapper(), url
-        )
-        if (list.isEmpty()) {
-            return null
+        val query = SubscriptionsTable
+            .select { (SubscriptionsTable.url eq url) and (SubscriptionsTable.deletedAt eq null) }
+            .orderBy(SubscriptionsTable.createdAt, SortOrder.DESC)
+            .limit(1)
+
+        for (item in query){
+            return item.toSubscriptionEntity()
         }
-        return list[0]
+        return null
     }
 
     override fun isUserSubscribe(userId: Long, subscriptionId: Long): Boolean {
-        val result = jdbcTemplate.queryForList(
-            "SELECT users_id FROM users_subscriptions WHERE users_id = ? AND subscriptions_id = ? ",
-            userId,
-            subscriptionId
-        )
-        return result.isNotEmpty()
+        val count = UsersSubscriptionsTable
+            .select { (UsersSubscriptionsTable.usersId eq userId) and (UsersSubscriptionsTable.subscriptionsId eq subscriptionId) }
+            .count()
+        return count != 0L
     }
 
-    override fun linkingUserAndSubscription(userId: Long, subscriptionId: Long, subscriptionName: String) {
-        jdbcTemplate.update(
-            "INSERT INTO users_subscriptions(users_id, subscriptions_id, name, created_at) VALUES (?,?,?,?)",
-            userId, subscriptionId, subscriptionName, LocalDateTime.now()
-        )
+    override fun linkingUserAndSubscription(userId: Long, subscriptionId: Long, subscriptionName: String, createdAt: LocalDateTime) {
+        UsersSubscriptionsTable.insert {
+            it[usersId] = userId
+            it[subscriptionsId] = subscriptionId
+            it[name] = subscriptionName
+            it[this.createdAt] = createdAt
+        }
     }
 }

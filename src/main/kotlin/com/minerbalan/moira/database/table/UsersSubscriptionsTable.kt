@@ -14,6 +14,8 @@ object UsersSubscriptionsTable : Table("users_subscriptions") {
         onUpdate = ReferenceOption.CASCADE,
         onDelete = ReferenceOption.CASCADE
     )
+
+    val name = varchar("name", 255)
     val createdAt = datetime("created_at")
 
     override val primaryKey = PrimaryKey(usersId, subscriptionsId)

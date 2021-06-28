@@ -1,8 +1,8 @@
 package com.minerbalan.moira.interactor
 
-import com.minerbalan.moira.domain.entity.SubscriptionEntity
-import com.minerbalan.moira.domain.repository.SubscriptionsRepository
+import com.minerbalan.moira.domain.repository.subscription.SubscriptionsRepository
 import com.minerbalan.moira.domain.repository.UsersRepository
+import com.minerbalan.moira.domain.repository.subscription.InsertSubscriptionData
 import com.minerbalan.moira.gateway.rss.RssGateway
 import com.minerbalan.moira.usecase.subscription.SubscriptionUseCase
 import com.minerbalan.moira.usecase.UseCaseResult
@@ -39,8 +39,7 @@ class SubscriptionInteractor(
         }
 
         if (subscription == null) {
-            val newSubscription = SubscriptionEntity(
-                id = null,
+            val newSubscription = InsertSubscriptionData(
                 url = url,
                 createdAt = LocalDateTime.now(),
                 lastFetchedAt = LocalDateTime.now()
@@ -56,7 +55,7 @@ class SubscriptionInteractor(
 
         val subscriptionName = name ?: feedName
 
-        subscriptionsRepository.linkingUserAndSubscription(userId, subscriptionId, subscriptionName)
+        subscriptionsRepository.linkingUserAndSubscription(userId, subscriptionId, subscriptionName, LocalDateTime.now())
         return InteractorResult.createSuccessResult()
     }
 
