@@ -1,18 +1,20 @@
 package com.minerbalan.moira.interactor
 
 import com.minerbalan.moira.domain.repository.subscription.SubscriptionsRepository
-import com.minerbalan.moira.domain.repository.UsersRepository
+import com.minerbalan.moira.domain.repository.user.UsersRepository
 import com.minerbalan.moira.domain.repository.subscription.InsertSubscriptionData
 import com.minerbalan.moira.gateway.rss.RssGateway
 import com.minerbalan.moira.usecase.subscription.SubscriptionUseCase
 import com.minerbalan.moira.usecase.UseCaseResult
 import com.rometools.rome.io.FeedException
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.io.IOException
 import java.time.LocalDateTime
 import kotlin.IllegalStateException
 
 @Service
+@Transactional
 class SubscriptionInteractor(
     val subscriptionsRepository: SubscriptionsRepository,
     val usersRepository: UsersRepository,

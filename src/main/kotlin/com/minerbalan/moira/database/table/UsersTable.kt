@@ -1,5 +1,7 @@
 package com.minerbalan.moira.database.table
 
+import com.minerbalan.moira.domain.entity.UserEntity
+import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.`java-time`.datetime
 
@@ -12,4 +14,15 @@ object UsersTable : Table("users") {
     val updatedAt = datetime("updated_at").nullable()
 
     override val primaryKey = PrimaryKey(id)
+}
+
+fun ResultRow.toUserEntity(): UserEntity {
+    return UserEntity(
+        id = this[UsersTable.id],
+        userName = this[UsersTable.userName],
+        email = this[UsersTable.email],
+        password = this[UsersTable.password],
+        createdAt = this[UsersTable.createdAt],
+        updatedAt = this[UsersTable.updatedAt],
+    )
 }

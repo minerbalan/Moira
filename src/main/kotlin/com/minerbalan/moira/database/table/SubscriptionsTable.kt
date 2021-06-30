@@ -7,7 +7,6 @@ import org.jetbrains.exposed.sql.`java-time`.datetime
 
 object SubscriptionsTable : Table("subscriptions") {
     val id = long("id").autoIncrement()
-    val name = varchar("name", 255).uniqueIndex()
     val url = varchar("url", 255)
     val createdAt = datetime("created_at")
     val lastFetchedAt = datetime("last_fetched_at").nullable()

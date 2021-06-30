@@ -1,37 +1,34 @@
 package com.minerbalan.moira.database
 
-import com.minerbalan.moira.database.rowmapper.UserRowMapper
+import com.minerbalan.moira.database.table.UsersTable
+import com.minerbalan.moira.database.table.toUserEntity
 import com.minerbalan.moira.domain.entity.UserEntity
-import com.minerbalan.moira.domain.repository.UsersRepository
-import org.slf4j.LoggerFactory
-import org.springframework.jdbc.core.JdbcTemplate
+import com.minerbalan.moira.domain.repository.user.InsertUserData
+import com.minerbalan.moira.domain.repository.user.UsersRepository
+import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.select
 import org.springframework.stereotype.Repository
-import java.lang.Exception
 
 @Repository
-class UsersRepositoryImpl(private val jdbcTemplate: JdbcTemplate) : UsersRepository {
-    private val logger = LoggerFactory.getLogger(this.javaClass)
-
-    override fun createUser(userEntity: UserEntity) {
-        val sql = "INSERT INTO users(user_name, email, password, created_at) VALUES (?,?,?,?)"
-        jdbcTemplate.update(sql, userEntity.userName, userEntity.email, userEntity.password, userEntity.createdAt)
+class UsersRepositoryImpl : UsersRepository {
+    override fun createUser(userData: InsertUserData) {
+        UsersTable.insert {
+            it[userName] = userData.userName
+            it[email] = userData.email
+            it[password] = userData.password
+            it[createdAt] = userData.createdAt
+        }
     }
 
     override fun existsUser(email: String): Boolean {
-        val sql = "SELECT * FROM users WHERE email = ?"
-        val userList = jdbcTemplate.query(sql, UserRowMapper(), email)
-        return userList.isNotEmpty()
+        val count = UsersTable.select { UsersTable.email eq email }.count()
+        return count != 0L
     }
 
     override fun findUserFromEmail(email: String): UserEntity? {
-        val sql = "SELECT * FROM users WHERE email = ?"
-        try {
-            val userList = jdbcTemplate.query(sql, UserRowMapper(), email)
-            if (userList.isNotEmpty()) {
-                return userList[0]
-            }
-        } catch (e: Exception) {
-            logger.error("An error has occurred on find user from email", e)
+        val query = UsersTable.select { UsersTable.email eq email }
+        for (item in query) {
+            return item.toUserEntity()
         }
         return null
     }
