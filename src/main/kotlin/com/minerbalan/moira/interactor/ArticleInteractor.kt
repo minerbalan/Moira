@@ -19,7 +19,9 @@ class ArticleInteractor(private val articlesRepository: ArticlesRepository) : Ar
                     title = it.title,
                     url = it.url,
                     description = it.description,
-                    thumbnail = it.thumbnail
+                    thumbnail = it.thumbnail,
+                    publishedAt = it.publishedAt,
+                    subscriptionName = it.subscriptionName
                 )
             )
         }

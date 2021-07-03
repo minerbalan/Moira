@@ -1,10 +1,8 @@
 package com.minerbalan.moira.database
 
-import com.minerbalan.moira.database.table.ArticlesTable
-import com.minerbalan.moira.database.table.UsersSubscriptionsTable
-import com.minerbalan.moira.database.table.UsersTable
-import com.minerbalan.moira.database.table.toArticleEntity
+import com.minerbalan.moira.database.table.*
 import com.minerbalan.moira.domain.entity.ArticleEntity
+import com.minerbalan.moira.domain.repository.article.ArticleData
 import com.minerbalan.moira.domain.repository.article.ArticlesRepository
 import com.minerbalan.moira.domain.repository.article.InsertArticleData
 import org.jetbrains.exposed.sql.*
@@ -114,8 +112,8 @@ class ArticlesRepositoryImpl(private val jdbcTemplate: JdbcTemplate) : ArticlesR
         }
     }
 
-    override fun fetchArticleLatest(email: String, limit: Int, offset: Int): List<ArticleEntity> {
-        val result = ArrayList<ArticleEntity>()
+    override fun fetchArticleLatest(email: String, limit: Int, offset: Int): List<ArticleData> {
+        val result = ArrayList<ArticleData>()
         val resultRow = ArticlesTable
             .join(
                 otherTable = UsersSubscriptionsTable,
@@ -134,7 +132,19 @@ class ArticlesRepositoryImpl(private val jdbcTemplate: JdbcTemplate) : ArticlesR
             .orderBy(ArticlesTable.publishedAt, SortOrder.DESC)
 
         for (item in resultRow) {
-            result.add(item.toArticleEntity())
+            val articleEntity = item.toArticleEntity()
+            val userSub = item.toUserSubscriptionEntity()
+            val articleData = ArticleData(
+                id = articleEntity.id,
+                subscriptionId = articleEntity.subscriptionId,
+                url = articleEntity.url,
+                title = articleEntity.title,
+                description = articleEntity.description,
+                thumbnail = articleEntity.thumbnail,
+                publishedAt = articleEntity.publishedAt,
+                subscriptionName = userSub.name
+            )
+            result.add(articleData)
         }
 
         return result

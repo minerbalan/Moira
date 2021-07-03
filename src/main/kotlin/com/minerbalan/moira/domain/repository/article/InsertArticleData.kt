@@ -11,7 +11,7 @@ data class InsertArticleData(
 
     var description: String?,
 
-    var thumbnail: String? ,
+    var thumbnail: String?,
 
     var createdAt: LocalDateTime,
 

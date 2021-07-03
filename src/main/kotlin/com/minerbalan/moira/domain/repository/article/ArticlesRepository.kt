@@ -9,7 +9,7 @@ interface ArticlesRepository {
 
     fun bulkUpdateThumbnailArticles(articleEntityList: List<ArticleEntity>)
 
-    fun fetchArticleLatest(email: String, limit: Int, offset: Int): List<ArticleEntity>
+    fun fetchArticleLatest(email: String, limit: Int, offset: Int): List<ArticleData>
 
     fun countArticle(email: String): Long
 }
