@@ -25,7 +25,7 @@ class RssGatewayImpl : RssGateway {
     override fun fetchArticleFromSubscriptions(subscriptionEntityList: List<SubscriptionEntity>): List<RssArticleOutputData> {
         val articleList = ArrayList<RssArticleOutputData>()
         for (subscription in subscriptionEntityList) {
-            val subscriptionId = subscription.id ?: continue
+            val subscriptionId = subscription.id
             val url = subscription.url
             val httpUriRequest: HttpUriRequest = HttpGet(url)
             try {
